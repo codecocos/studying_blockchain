@@ -1,9 +1,10 @@
-import WebSocket, { Server } from "ws";
+import * as WebSocket from "ws";
+import { Server } from "ws";
 import {
-  Block,
-  getLatestBlock,
-  getBlockchain,
   addBlockToChain,
+  Block,
+  getBlockchain,
+  getLatestBlock,
   isValidBlockStructure,
   replaceChain,
 } from "./blockchain";

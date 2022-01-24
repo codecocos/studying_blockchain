@@ -1,4 +1,5 @@
 import * as CryptoJS from "crypto-js";
+import { broadcastLatest } from "./p2p";
 
 class Block {
   public index: number;

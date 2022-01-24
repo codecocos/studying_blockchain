@@ -1,5 +1,5 @@
-import bodyParser = require("body-parser");
-import express = require("express");
+import * as bodyParser from "body-parser";
+import * as express from "express";
 
 import { Block, generateNextBlock, getBlockchain } from "./blockchain";
 import { connectToPeers, getSockets, initP2PServer } from "./p2p";
