@@ -122,7 +122,10 @@ const isValidNewBlock = (newBlock, previousBlock) => {
     } else if (previousBlock.hash !== newBlock.previousHash) {
         console.log('invalid previoushash');
         return false;
-    } 
+    } else if (!isValidTimestamp(newBlock, previousBlock)) {
+        console.log('invalid timestamp');
+        return false; 
+    }
     //chapter 1
     // else if (calculateHashForBlock(newBlock) !== newBlock.hash) {
     //     console.log(typeof (newBlock.hash) + ' ' + typeof calculateHashForBlock(newBlock));
@@ -202,7 +205,9 @@ const addBlockToChain = (newBlock) => {
 const replaceChain = (newBlocks) => {
   const {broadcastLatest} = require('./p2p')
 
-    if (isValidChain(newBlocks) && newBlocks.length > getBlockchain().length) {
+    //if (isValidChain(newBlocks) && newBlocks.length > getBlockchain().length) {
+        if (isValidChain(newBlocks) &&
+        getAccumulatedDifficulty(newBlocks) > getAccumulatedDifficulty(getBlockchain())) {
         console.log('Received blockchain is valid. Replacing current blockchain with received blockchain');
         blockchain = newBlocks;
         broadcastLatest();
