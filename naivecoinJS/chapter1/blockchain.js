@@ -22,8 +22,8 @@ const getBlockchain = () => blockchain;
 const getLatestBlock = () => blockchain[blockchain.length - 1];
 
 const generateNextBlock = (blockData) => {
-  const {broadcastLatest} = require('./p2p')
-  console.log("\n2. 다음 블럭 생성 함수 : " ,blockData );
+    const { broadcastLatest } = require('./p2p')
+    console.log("\n2. 다음 블럭 생성 함수 : ", blockData);
 
     const previousBlock = getLatestBlock();
     const nextIndex = previousBlock.index + 1;
@@ -42,9 +42,9 @@ const calculateHash = (index, previousHash, timestamp, data) =>
     CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
 
 const addBlock = (newBlock) => {
-  console.log("\n3. 애드블럭할 블럭내용 : \n", newBlock);
+    console.log("\n3. 애드블럭할 블럭내용 : \n", newBlock);
     if (isValidNewBlock(newBlock, getLatestBlock())) {
-      console.log('\n5.유효성검사 끝남(블록체인에추가됩니다)');
+        console.log('\n5.유효성검사 끝남(블록체인에추가됩니다)');
         blockchain.push(newBlock);
     }
 };
@@ -58,7 +58,7 @@ const isValidBlockStructure = (block) => {
 };
 
 const isValidNewBlock = (newBlock, previousBlock) => {
-  console.log("\n4.애드블럭시 유효성 검사 진입");
+    console.log("\n4.애드블럭시 유효성 검사 진입");
     if (!isValidBlockStructure(newBlock)) {
         console.log('invalid structure');
         return false;
@@ -103,7 +103,7 @@ const addBlockToChain = (newBlock) => {
 };
 
 const replaceChain = (newBlocks) => {
-  const {broadcastLatest} = require('./p2p')
+    const { broadcastLatest } = require('./p2p')
 
     if (isValidChain(newBlocks) && newBlocks.length > getBlockchain().length) {
         console.log('Received blockchain is valid. Replacing current blockchain with received blockchain');
@@ -114,4 +114,4 @@ const replaceChain = (newBlocks) => {
     }
 };
 
-module.exports={Block, getBlockchain, getLatestBlock, generateNextBlock, isValidBlockStructure, replaceChain, addBlockToChain};
+module.exports = { Block, getBlockchain, getLatestBlock, generateNextBlock, isValidBlockStructure, replaceChain, addBlockToChain };
