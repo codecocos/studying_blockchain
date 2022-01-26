@@ -1,10 +1,10 @@
 //chapter2 : 디피컬티 추가 , 넌스 추가
 
 const CryptoJS = require('crypto-js')
-const {hexToBinary} = require('./util')
+const { hexToBinary } = require('./util')
 
 class Block {
-    constructor(index, hash, previousHash, timestamp, data,difficulty, nonce) {
+    constructor(index, hash, previousHash, timestamp, data, difficulty, nonce) {
         this.index = index;
         this.previousHash = previousHash;
         this.timestamp = timestamp;
@@ -16,7 +16,7 @@ class Block {
 }
 
 const genesisBlock = new Block(
-    0, '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7', '', 1465154705, 'my genesis block!!',0,0
+    0, '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7', '', 1465154705, 'my genesis block!!', 0, 0
 );
 
 let blockchain = [genesisBlock];
@@ -57,20 +57,20 @@ const getCurrentTimestamp = () => Math.round(new Date().getTime() / 1000);
 ////////////////////////////////////////////////////////////////////////////////////
 
 const generateNextBlock = (blockData) => {
-  const {broadcastLatest} = require('./p2p')
-  console.log("\n2. 다음 블럭 생성 함수 : " ,blockData );
+    const { broadcastLatest } = require('./p2p')
+    console.log("\n2. 다음 블럭 생성 함수 : ", blockData);
 
     const previousBlock = getLatestBlock();
-   
+
     const difficulty = getDifficulty(getBlockchain()) //chapter2 추가
     console.log("difficulty추가 : ", difficulty);
-   
+
     const nextIndex = previousBlock.index + 1;
     const nextTimestamp = getCurrentTimestamp()
     //const nextHash = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData); //chapter 1
     //const newBlock = new Block(nextIndex, nextHash, previousBlock.hash, nextTimestamp, blockData); //chapter 1
     const newBlock = findBlock(nextIndex, previousBlock.hash, nextTimestamp, blockData, difficulty); //chapter2 에서 변경
-    
+
     addBlock(newBlock);
     broadcastLatest();
     return newBlock;
@@ -91,13 +91,13 @@ const findBlock = (index, previousHash, timestamp, data, difficulty) => {
 const calculateHashForBlock = (block) =>
     calculateHash(block.index, block.previousHash, block.timestamp, block.data, block.difficulty, block.nonce);
 
-const calculateHash = (index, previousHash, timestamp, data, difficulty,nonce) =>
-    CryptoJS.SHA256(index + previousHash + timestamp + data+difficulty+nonce).toString();
+const calculateHash = (index, previousHash, timestamp, data, difficulty, nonce) =>
+    CryptoJS.SHA256(index + previousHash + timestamp + data + difficulty + nonce).toString();
 
 const addBlock = (newBlock) => {
-  console.log("\n3. 애드블럭할 블럭내용 : \n", newBlock);
+    console.log("\n3. 애드블럭할 블럭내용 : \n", newBlock);
     if (isValidNewBlock(newBlock, getLatestBlock())) {
-      console.log('\n5.유효성검사 끝남(블록체인에추가됩니다)');
+        console.log('\n5.유효성검사 끝남(블록체인에추가됩니다)');
         blockchain.push(newBlock);
     }
 };
@@ -111,7 +111,7 @@ const isValidBlockStructure = (block) => {
 };
 
 const isValidNewBlock = (newBlock, previousBlock) => {
-  console.log("\n4.애드블럭시 유효성 검사 진입");
+    console.log("\n4.애드블럭시 유효성 검사 진입");
     if (!isValidBlockStructure(newBlock)) {
         console.log('invalid structure');
         return false;
@@ -124,7 +124,7 @@ const isValidNewBlock = (newBlock, previousBlock) => {
         return false;
     } else if (!isValidTimestamp(newBlock, previousBlock)) {
         console.log('invalid timestamp');
-        return false; 
+        return false;
     }
     //chapter 1
     // else if (calculateHashForBlock(newBlock) !== newBlock.hash) {
@@ -133,7 +133,7 @@ const isValidNewBlock = (newBlock, previousBlock) => {
     //     return false;
     // }
     //chapter 2
-    else if(!hasValidHash(newBlock)){
+    else if (!hasValidHash(newBlock)) {
         return false
     }
     return true;
@@ -148,7 +148,7 @@ const getAccumulatedDifficulty = (aBlockchain) => {
 };
 
 const isValidTimestamp = (newBlock, previousBlock) => {
-    return ( previousBlock.timestamp - 60 < newBlock.timestamp )
+    return (previousBlock.timestamp - 60 < newBlock.timestamp)
         && newBlock.timestamp - 60 < getCurrentTimestamp();
 };
 
@@ -203,10 +203,10 @@ const addBlockToChain = (newBlock) => {
 };
 
 const replaceChain = (newBlocks) => {
-  const {broadcastLatest} = require('./p2p')
+    const { broadcastLatest } = require('./p2p')
 
     //if (isValidChain(newBlocks) && newBlocks.length > getBlockchain().length) {
-        if (isValidChain(newBlocks) &&
+    if (isValidChain(newBlocks) &&
         getAccumulatedDifficulty(newBlocks) > getAccumulatedDifficulty(getBlockchain())) {
         console.log('Received blockchain is valid. Replacing current blockchain with received blockchain');
         blockchain = newBlocks;
@@ -216,4 +216,4 @@ const replaceChain = (newBlocks) => {
     }
 };
 
-module.exports={Block, getBlockchain, getLatestBlock, generateNextBlock, isValidBlockStructure, replaceChain, addBlockToChain};
+module.exports = { Block, getBlockchain, getLatestBlock, generateNextBlock, isValidBlockStructure, replaceChain, addBlockToChain };
