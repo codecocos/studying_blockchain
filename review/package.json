@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "server1": "set HTTP_PORT=5001 && npm start --prefix server ",
+    "server2": "set HTTP_PORT=5002 && npm start --prefix server ",
+    "server3": "set HTTP_PORT=5003 && npm start --prefix server ",
+    "client1": "set PORT=3001 && npm start --prefix client ",
+    "client2": "set PORT=3002 && npm start --prefix client ",
+    "client3": "set PORT=3003 && npm start --prefix client ",
+    "start1": "concurrently \"npm run server1\" \"npm run client1\"",
+    "start2": "concurrently \"npm run server2\" \"npm run client2\"",
+    "start3": "concurrently \"npm run server3\" \"npm run client3\""
+  },
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
