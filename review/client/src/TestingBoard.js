@@ -1,29 +1,34 @@
 import axios from 'axios';
 
+
 function TestingBoard() {
+
+  const serverPort = parseInt(window.location.port) + 2000;
+  const serverUrl = `http://127.0.0.1:${serverPort}`;
+
   function block() {
-    axios.post("/test/blocks").then((res) => {
+    axios.post(`${serverUrl}/test/blocks`).then((res) => {
       const data = res.data;
       document.getElementById("writefield").innerText =
         JSON.stringify(data);
     });
   }
   function mineBlock() {
-    axios.post("/test/mineBlock").then((res) => {
+    axios.post(`${serverUrl}/test/mineBlock`).then((res) => {
       const data = res.data;
       document.getElementById("writefield").innerText =
         JSON.stringify(data);
     });
   }
   function initWallet() {
-    axios.post("/test/initWallet").then((res) => {
+    axios.post(`${serverUrl}/test/initWallet`).then((res) => {
       const data = res.data;
       document.getElementById("writefield").innerText =
         JSON.stringify(data);
     });
   }
   function getAddress() {
-    axios.post("/test/getAddress").then((res) => {
+    axios.post(`${serverUrl}/test/getAddress`).then((res) => {
       const data = res.data;
       document.getElementById("writefield").innerText =
         JSON.stringify(data);
@@ -31,7 +36,9 @@ function TestingBoard() {
   }
 
   function socketOn() {
-    axios.post('/test/socketOn').then((res) => {
+    //const socketNumber = prompt('개설하실 소켓넘버를 입력하세요.', '6001')
+    // { data: socketNumber }
+    axios.post(`${serverUrl}/test/socketOn`).then((res) => {
       const data = res.data;
       document.getElementById("writefield").innerText =
         JSON.stringify(data);
@@ -39,7 +46,7 @@ function TestingBoard() {
   }
 
   function peers() {
-    axios.post("/test/peers").then((res) => {
+    axios.post(`${serverUrl}/test/peers`).then((res) => {
       const data = res.data;
       document.getElementById("writefield").innerText =
         JSON.stringify(data);
@@ -48,10 +55,9 @@ function TestingBoard() {
 
   function addPeer() {
     const socketAddress = {
-      address: 'ws://127.0.0.1:6001'
+      data: 'ws://127.0.0.1:6001'
     }
-
-    axios.post("/test/addPeer", socketAddress).then((res) => {
+    axios.post(`${serverUrl}/test/addPeer`, socketAddress).then((res) => {
       const data = res.data;
       document.getElementById("writefield").innerText =
         JSON.stringify(data);
@@ -59,7 +65,7 @@ function TestingBoard() {
   }
 
   function balance() {
-    axios.post("/test/balance").then((res) => {
+    axios.post(`${serverUrl}/test/balance`).then((res) => {
       const data = res.data;
       document.getElementById("writefield").innerText =
         JSON.stringify(data);
@@ -93,7 +99,7 @@ function TestingBoard() {
         </li>
         <li>
           <button id="socketOn" onClick={() => socketOn()}>
-            socketOn
+            socketOn : 웹소켓서버오픈
           </button>
         </li>
         <li>
