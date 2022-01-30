@@ -82,7 +82,7 @@ const generateNextBlock = (blockData) => {
     //chapter2
     //addBlock(newBlock);
 
-    //chapter3
+    //chapter3 : addblock -> addblockToChain으로 변경
     if (addBlockToChain(newBlock)) {
         broadcastLatest();
         return newBlock;
