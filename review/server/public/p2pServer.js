@@ -9,21 +9,34 @@ const MessageType = {
   RESPONSE_BLOCKCHAIN: 2,
 }
 
-
 const initP2PServer = (p2pPort) => {
+  console.log("소켓 환경 변수 :", p2pPort);
+
+  //P2P 서버 공간 확보 : 서버 열어 준다.
   const server = new WebSocket.Server({ port: p2pPort });
+
+
+  //connectToPeers 할 때 작동
   server.on('connection', (ws) => {
-    console.log("\n@@@@웹소켓서버 서버 온@@@@@\n");
+
+    console.log(`\n initP2PServer - S3. ${p2pPort} 소켓 서버 접속완료\n (connectToPeers 가 작동 할 때 실행됩니다.) `);
+    console.log("sockets 배열을 확인해봅시다", sockets)
+    console.log("server을 확인해봅시다", server)
+    //나에게 접속한 클라이언트끼리 통신할 수 있게 sockets에 넣는다.
     initConnection(ws);
   });
-  console.log('listening websocket p2p port on: ' + p2pPort);
+
+  console.log(`\n  initP2PServer - S1. 웹소켓 서버 포트 : ${p2pPort} 번에 서버 공간 확보.`);
 };
 
 const getSockets = () => sockets;
 
 const initConnection = (ws) => {
-  console.log('4. 인잇컨넥션 진입 - 소켓배열에 푸쉬됨\n');
+
+  console.log(`\n initConnection - S4. 소켓 배열에 푸쉬됩니다.  [${sockets}]`);
+  console.log([11111]);
   sockets.push(ws);
+
   initMessageHandler(ws);
   initErrorHandler(ws);
   write(ws, queryChainLengthMsg());
@@ -39,9 +52,10 @@ const JSONToObject = (data) => {
 };
 
 const initMessageHandler = (ws) => {
-  console.log('5. 메세지 핸들러 진입\n');
+  console.log(`\n initMessageHandler - S5. 메세지 핸들러에 진입합니다.`);
+
   ws.on('message', (data) => {
-    console.log('\n6. 메시지 핸들러 속 메세지 확인\n');
+    console.log('\n initMessageHandler - S7. message.type 에 따라 다음 과정을 실행합니다.');
     //버퍼로 받은 데이터 제이슨 형식으로 파서
     const message = JSONToObject(data);
 
@@ -49,19 +63,20 @@ const initMessageHandler = (ws) => {
       console.log('could not parse received JSON message: ' + data);
       return;
     }
-    console.log('Received message' + JSON.stringify(message));
+
+    console.log(' Received message' + JSON.stringify(message));
 
     switch (message.type) {
       case MessageType.QUERY_LATEST:
-        console.log("\n7. 메세지타입 : QUERY_LATEST");
+        console.log("\n initMessageHandler - S8. 메세지타입 : QUERY_LATEST");
         write(ws, responseLatestMsg());
         break;
       case MessageType.QUERY_ALL:
-        console.log("\n7. 메세지타입 : QUERY_ALL");
+        console.log("\n initMessageHandler - S8. 메세지타입 : QUERY_ALL");
         write(ws, responseChainMsg());
         break;
       case MessageType.RESPONSE_BLOCKCHAIN:
-        console.log("\n7. 메세지타입 : RESPONSE_BLOCKCHAIN");
+        console.log("\n initMessageHandler - S8. 메세지타입 : RESPONSE_BLOCKCHAIN");
         const receivedBlocks = JSONToObject(message.data);
         if (receivedBlocks === null) {
           console.log('invalid blocks received:');
@@ -75,7 +90,7 @@ const initMessageHandler = (ws) => {
 };
 
 const write = (ws, message) => {
-  console.log('\n8. 소켓에 메세지 보낸다~');
+  console.log('\n write - S6. message 객체를 글자로 바꿔서 보내줍니다.');
   ws.send(JSON.stringify(message))
 };
 
@@ -141,16 +156,27 @@ const broadcastLatest = () => {
 };
 
 const connectToPeers = (newPeer) => {
-  console.log("2. 컨넥트투피어진입");
-  console.log(newPeer);
+  console.log(`\n connectToPeers - S2. ${newPeer} 가 컨넥트투 피어에 진입합니다.\n`);
+
+  //열려있는 서버를 이용.
   const ws = new WebSocket(newPeer);
+
+
   ws.on('open', () => {
-    console.log('3. ws.on(접속) - 오픈 진입\n');
+    console.log('connectToPeers - 3. ws.on(접속) - 오픈 진입\n');
+    //열려있는 서버에 client sockets추가
     initConnection(ws);
   });
+
   ws.on('error', (errorType) => {
     console.log('connection failed' + errorType);
   });
+
 };
 
-module.exports = { connectToPeers, broadcastLatest, initP2PServer, getSockets };
+module.exports = {
+  connectToPeers,
+  broadcastLatest,
+  initP2PServer,
+  getSockets,
+};

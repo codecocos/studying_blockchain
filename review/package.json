@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "server1": "set HTTP_PORT=5001 && set PRIVATE_KEY=wallet1 && npm start --prefix server ",
-    "server2": "set HTTP_PORT=5002 && set PRIVATE_KEY=wallet2 && npm start --prefix server ",
-    "server3": "set HTTP_PORT=5003 && set PRIVATE_KEY=wallet3 && npm start --prefix server ",
+    "server1": "set HTTP_PORT=5001 && set P2P_PORT=6001 && set PRIVATE_KEY=wallet1 && npm start --prefix server ",
+    "server2": "set HTTP_PORT=5002 && set P2P_PORT=6002 && set PRIVATE_KEY=wallet2 && npm start --prefix server ",
+    "server3": "set HTTP_PORT=5003 && set P2P_PORT=6003 && set PRIVATE_KEY=wallet3 && npm start --prefix server ",
     "client1": "set PORT=3001 && set HTTP_PORT=5001 && npm start --prefix client ",
     "client2": "set PORT=3002 && set HTTP_PORT=5002 && npm start --prefix client ",
     "client3": "set PORT=3003 && set HTTP_PORT=5003 && npm start --prefix client ",

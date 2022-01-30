@@ -9,7 +9,7 @@ const privateKeyFile = privateKeyLocation + "/private_key";
 function initWallet() {
   if (fs.existsSync(privateKeyFile)) {
     console.log("기존 지갑 경로 : " + privateKeyFile);
-    return { message: "기존지갑경로가 있습니다." };
+    return { message: "기존지갑경로가 있습니다.", address: getPublicFromWallet() };
   }
   if (!fs.existsSync("wallet/")) {
     fs.mkdirSync("wallet/");
@@ -21,7 +21,7 @@ function initWallet() {
   const newPrivateKey = generatePrivatekey();
   fs.writeFileSync(privateKeyFile, newPrivateKey);
   console.log("새로운 지갑경로 생성 경로 : " + privateKeyFile);
-  return { message: "지갑이 잘 생성되었습니다." };
+  return { message: "지갑이 잘 생성되었습니다.", address: getPublicFromWallet() };
 }
 
 function generatePrivatekey() {
@@ -48,7 +48,8 @@ console.log('getPublicFromWallet::: 지갑 주소!\n', getPublicFromWallet());
 
 const getBalance = (address, unspentTxOuts) => {
   console.log('\n2.getBalance 진입');
-  console.log(unspentTxOuts);
+  console.log("\nUTxO\n", unspentTxOuts);
+  console.log('\n잔액조회할 주소: \n', address);
 
   const test = _(unspentTxOuts)
     .filter((uTxO) => uTxO.address === address)
@@ -83,6 +84,7 @@ const findTxOutsForAmount = (amount, myUnspentTxOuts) => {
 
 const createTxOuts = (receiverAddress, myAddress, amount, leftOverAmount) => {
   //보낼 아웃풋
+  const { TxOut } = require('./transaction')
   const txOut1 = new TxOut(receiverAddress, amount);
   if (leftOverAmount === 0) {
     return [txOut1];
@@ -95,6 +97,7 @@ const createTxOuts = (receiverAddress, myAddress, amount, leftOverAmount) => {
 
 const createTransaction = (receiverAddress, amount,
   privateKey, unspentTxOuts) => {
+  const { getPublicKey, TxIn, Transaction, signTxIn, getTransactionId } = require('./transaction')
   console.log('\n createTransaction 진입 : 블록 생성시 바디데이터에 코인베이스크랜잭션과 함께 담긴다.');
   const myAddress = getPublicKey(privateKey);
   const myUnspentTxOuts = unspentTxOuts.filter((uTxO) => uTxO.address === myAddress);

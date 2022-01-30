@@ -133,6 +133,7 @@ const findBlock = (index, previousHash, timestamp, data, difficulty) => {
 //chapter4 추가
 const getAccountBalance = () => {
   console.log("\n1.잔고 계산 시작");
+  console.log("\nUTxO\n", unspentTxOuts);
   const { getBalance, getPublicFromWallet } = require('./wallet');
   return getBalance(getPublicFromWallet(), unspentTxOuts);
 };

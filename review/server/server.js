@@ -4,16 +4,13 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors')
-const { initP2PServer } = require('./public/p2pServer')
+const dotenv = require('dotenv')
 
 const indexRouter = require('./routes/index');
 
+dotenv.config();
 
 const app = express();
-
-// // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -41,10 +38,6 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send('error');
 });
-
-const p2pPort = 6001
-initP2PServer(p2pPort)
-
 
 
 module.exports = app;
