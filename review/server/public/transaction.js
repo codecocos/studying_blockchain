@@ -56,6 +56,11 @@ const getTransactionId = (transaction) => {
 
 const validateTransaction = (transaction, aUnspentTxOuts) => {
 
+    //ch5 추가
+    if (!isValidTransactionStructure(transaction)) {
+        return false;
+    }
+
     // 유효한 트랜잭션 ID 인지 확인
     if (getTransactionId(transaction) !== transaction.id) {
         console.log('invalid tx id: ' + transaction.id);
@@ -253,9 +258,10 @@ const updateUnspentTxOuts = (aTransactions, aUnspentTxOuts) => {
 
 const processTransactions = (aTransactions, aUnspentTxOuts, blockIndex) => {
     console.log('\n5.프로세스트랜잭션 진입');
-    if (!isValidTransactionsStructure(aTransactions)) {
-        return null;
-    }
+    //ch5에서 삭제
+    // if (!isValidTransactionsStructure(aTransactions)) {
+    //     return null;
+    // }
 
     if (!validateBlockTransactions(aTransactions, aUnspentTxOuts, blockIndex)) {
         console.log('invalid block transactions');
@@ -314,12 +320,13 @@ const isValidTxOutStructure = (txOut) => {
     }
 };
 
-const isValidTransactionsStructure = (transactions) => {
-    console.log("\n6. isValidTransactionsStructure(복수) 진입");
-    return transactions
-        .map(isValidTransactionStructure)
-        .reduce((a, b) => (a && b), true);
-};
+//ch5에서 삭제
+// const isValidTransactionsStructure = (transactions) => {
+//     console.log("\n6. isValidTransactionsStructure(복수) 진입");
+//     return transactions
+//         .map(isValidTransactionStructure)
+//         .reduce((a, b) => (a && b), true);
+// };
 
 //check all members of class
 const isValidTransactionStructure = (transaction) => {
@@ -357,6 +364,7 @@ const isValidTransactionStructure = (transaction) => {
 const isValidAddress = (address) => {
     console.log("\n7-3-1.isValidAddress 진입 \n or 2. 보낼 주소가 유효한 주소인지 확인");
     if (address.length !== 130) {
+        console.log(address);
         console.log('invalid public key length');
         return false;
     } else if (address.match('^[a-fA-F0-9]+$') === null) {
@@ -373,5 +381,5 @@ const isValidAddress = (address) => {
 module.exports = {
     processTransactions, signTxIn, getTransactionId, isValidAddress,
     UnspentTxOut, TxIn, TxOut, getCoinbaseTransaction, getPublicKey,
-    Transaction
+    Transaction, validateTransaction
 }

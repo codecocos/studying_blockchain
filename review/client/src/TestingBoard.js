@@ -87,6 +87,44 @@ function TestingBoard() {
         JSON.stringify(data);
     });
   }
+  function unspentTransactionOutputs() {
+    axios.post(`/api/test/unspentTransactionOutputs`).then((res) => {
+      const data = res.data;
+      document.getElementById("writefield").innerText =
+        JSON.stringify(data);
+    });
+  }
+  function myUnspentTransactionOutputs() {
+    axios.post(`/api/test/myUnspentTransactionOutputs`).then((res) => {
+      const data = res.data;
+      document.getElementById("writefield").innerText =
+        JSON.stringify(data);
+    });
+  }
+  function sendTransaction() {
+    const address = prompt('보낼주소는?', "04ac435d37f7aecf7d6d22ca774648c3e3704cd1dfba9901ea8f16574532d3bae770b4f21691e477098c50ddfd8bd2f563a0a9dbf41453ab7b972014b8c16ea425")
+    const amount = prompt('보낼 양', '35')
+
+    axios.post(`/api/test/sendTransaction`, { address: address, amount: amount }).then((res) => {
+      const data = res.data;
+      document.getElementById("writefield").innerText =
+        JSON.stringify(data);
+    });
+  }
+  function transactionPool() {
+    axios.post(`/api/test/transactionPool`).then((res) => {
+      const data = res.data;
+      document.getElementById("writefield").innerText =
+        JSON.stringify(data);
+    });
+  }
+  function stop() {
+    axios.post(`/api/test/stop`).then((res) => {
+      const data = res.data;
+      document.getElementById("writefield").innerText =
+        JSON.stringify(data);
+    });
+  }
 
 
   return (
@@ -141,6 +179,31 @@ function TestingBoard() {
         <li>
           <button id="mineTransaction" onClick={() => mineTransaction()}>
             mineTransaction
+          </button>
+        </li>
+        <li>
+          <button id="unspentTransactionOutputs" onClick={() => unspentTransactionOutputs()}>
+            unspentTransactionOutputs
+          </button>
+        </li>
+        <li>
+          <button id="myUnspentTransactionOutputs" onClick={() => myUnspentTransactionOutputs()}>
+            myUnspentTransactionOutputs
+          </button>
+        </li>
+        <li>
+          <button id="sendTransaction" onClick={() => sendTransaction()}>
+            sendTransaction
+          </button>
+        </li>
+        <li>
+          <button id="transactionPool" onClick={() => transactionPool()}>
+            transactionPool
+          </button>
+        </li>
+        <li>
+          <button id="stop" onClick={() => stop()}>
+            stop
           </button>
         </li>
       </ol>

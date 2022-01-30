@@ -1,15 +1,17 @@
 const express = require('express')
 const router = express.Router()
 
-const { generateNextBlock, generatenextBlockWithTransaction, getAccountBalance, getBlockchain, generateRawNextBlock } = require('../public/blockchain')
+const { generateNextBlock, generatenextBlockWithTransaction, getAccountBalance, getBlockchain, generateRawNextBlock,
+  getMyUnspentTransactionOutputs, getUnspentTxOuts, sendTransaction } = require('../public/blockchain')
 const { connectToPeers, getSockets, initP2PServer } = require('../public/p2pServer')
 const { initWallet, getPublicFromWallet } = require('../public/wallet')
+const { getTransactionPool } = require('../public/transactionPool')
 
 router.post('/blocks', (req, res) => {
   res.send(getBlockchain());
 });
 
-//바디데이터 입력없는 경우
+//바디데이터 입력없는 경우 : 코인베이스 트랜잭션
 router.post('/mineBlock', (req, res) => {
   console.log('블록생성을 시작합니다~~~~~~~~~');
 
@@ -119,5 +121,40 @@ router.post('/mineTransaction', (req, res) => {
     res.status(400).send(e.message);
   }
 });
+
+router.post('/unspentTransactionOutputs', (req, res) => {
+  res.send(getUnspentTxOuts());
+});
+
+router.post('/myUnspentTransactionOutputs', (req, res) => {
+  res.send(getMyUnspentTransactionOutputs());
+});
+
+router.post('/sendTransaction', (req, res) => {
+  try {
+    const address = req.body.address;
+    const amount = parseInt(req.body.amount);
+
+    if (address === undefined || amount === undefined) {
+      throw Error('invalid address or amount');
+    }
+    const resp = sendTransaction(address, amount);
+    res.send(resp);
+  } catch (e) {
+    console.log(e.message);
+    res.status(400).send(e.message);
+  }
+});
+
+router.post('/transactionPool', (req, res) => {
+  res.send(getTransactionPool());
+});
+
+router.post('/stop', (req, res) => {
+  res.send({ 'msg': 'stopping server' });
+  process.exit();
+});
+
+
 
 module.exports = router;
