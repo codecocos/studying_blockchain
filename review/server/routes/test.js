@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const _ = require('lodash');
 
 const { generateNextBlock, generatenextBlockWithTransaction, getAccountBalance, getBlockchain, generateRawNextBlock,
   getMyUnspentTransactionOutputs, getUnspentTxOuts, sendTransaction } = require('../public/blockchain')
@@ -153,6 +154,26 @@ router.post('/transactionPool', (req, res) => {
 router.post('/stop', (req, res) => {
   res.send({ 'msg': 'stopping server' });
   process.exit();
+});
+
+router.post('/block/:hash', (req, res) => {
+  console.log("해쉬값확인", req.params.hash)
+  const block = _.find(getBlockchain(), { 'hash': req.params.hash });
+  res.send(block);
+});
+
+router.post('/transaction/:id', (req, res) => {
+  const tx = _(getBlockchain())
+    .map((blocks) => blocks.data)
+    .flatten()
+    .find({ 'id': req.params.id });
+  res.send(tx);
+});
+
+router.post('/address/:address', (req, res) => {
+  const unspentTxOuts =
+    _.filter(getUnspentTxOuts(), (uTxO) => uTxO.address === req.params.address)
+  res.send({ 'unspentTxOuts': unspentTxOuts });
 });
 
 
