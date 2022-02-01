@@ -3,16 +3,19 @@ const { validateTransaction } = require('./transaction');
 
 let transactionPool = [];
 
+// 트랜잭션 풀 깊은 복사
 const getTransactionPool = () => {
     return _.cloneDeep(transactionPool);
 };
 
 const addToTransactionPool = (tx, unspentTxOuts) => {
 
+    //트랜잭션이 유효하지 않다면 에러문구
     if (!validateTransaction(tx, unspentTxOuts)) {
         throw Error('Trying to add invalid tx to pool');
     }
 
+    //
     if (!isValidTxForPool(tx, transactionPool)) {
         throw Error('Trying to add invalid tx to pool');
     }
@@ -43,6 +46,7 @@ const updateTransactionPool = (unspentTxOuts) => {
     }
 };
 
+//트랜잭션 풀에서 트랜잭션 인풋 불러오기
 const getTxPoolIns = (aTransactionPool) => {
     return _(aTransactionPool)
         .map((tx) => tx.txIns)

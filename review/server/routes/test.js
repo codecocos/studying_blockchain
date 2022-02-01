@@ -131,7 +131,9 @@ router.post('/myUnspentTransactionOutputs', (req, res) => {
   res.send(getMyUnspentTransactionOutputs());
 });
 
+//트랜잭션 보내기
 router.post('/sendTransaction', (req, res) => {
+  console.log('\nSR.1 sendTransaction 라우터에 진입합니다.\n');
   try {
     const address = req.body.address;
     const amount = parseInt(req.body.amount);
@@ -139,7 +141,9 @@ router.post('/sendTransaction', (req, res) => {
     if (address === undefined || amount === undefined) {
       throw Error('invalid address or amount');
     }
+
     const resp = sendTransaction(address, amount);
+
     res.send(resp);
   } catch (e) {
     console.log(e.message);
@@ -174,6 +178,57 @@ router.post('/address/:address', (req, res) => {
   const unspentTxOuts =
     _.filter(getUnspentTxOuts(), (uTxO) => uTxO.address === req.params.address)
   res.send({ 'unspentTxOuts': unspentTxOuts });
+});
+
+
+//확인용
+router.post('/genesisBlockData', (req, res) => {
+  // const { getTxPoolIns } = require('../public/transactionPool')
+
+  // res.send(getTxPoolIns());
+
+  class Block {
+    constructor(index, hash, previousHash, timestamp, data, difficulty, nonce) {
+      this.index = index;
+      this.hash = hash;
+      this.previousHash = previousHash;
+      this.timestamp = timestamp;
+      this.data = data;
+      this.difficulty = difficulty;
+      this.nonce = nonce;
+    }
+  }
+
+  const genesisTransaction = {
+    'txIns': [{ 'signature': '', 'txOutId': '', 'txOutIndex': 0 }],
+    'txOuts': [{
+      'address': '04bfcab8722991ae774db48f934ca79cfb7dd991229153b9f732ba5334aafcd8e7266e47076996b55a14bf9913ee3145ce0cfc1372ada8ada74bd287450313534a',
+      'amount': 50
+    }],
+    'id': 'e655f6a5f26dc9b4cac6e46f52336428287759cf81ef5ff10854f69d68f43fa3'
+  };
+
+
+  const genesisBlock = new Block(
+    0, //index
+    '91a73664bc84c0baa1fc75ea6e4aa6d1d20c5df664c724e3159aefc2e1186627', //hash
+    '', //previousHash
+    1465154705, //timestamp
+    [genesisTransaction], //data
+    0, //difficulty
+    0 //nonce
+  );
+
+
+  let blockchain = [genesisBlock];
+  console.log('blockchain[0].data\n', blockchain[0].data);
+
+  console.log('genesisBlock.data\n', genesisBlock.data);
+
+  res.send(genesisBlock.data)
+
+  //[{"txIns":[{"signature":"","txOutId":"","txOutIndex":0}],"txOuts":[{"address":"04bfcab8722991ae774db48f934ca79cfb7dd991229153b9f732ba5334aafcd8e7266e47076996b55a14bf9913ee3145ce0cfc1372ada8ada74bd287450313534a","amount":50}],"id":"e655f6a5f26dc9b4cac6e46f52336428287759cf81ef5ff10854f69d68f43fa3"}]
+
 });
 
 

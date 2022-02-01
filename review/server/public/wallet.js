@@ -105,11 +105,20 @@ const createTxOuts = (receiverAddress, myAddress, amount, leftOverAmount) => {
 
 //ch5
 const filterTxPoolTxs = (unspentTxOuts, transactionPool) => {
+  console.log('/////////////////////////////////');
+  console.log(unspentTxOuts);
+  console.log('/////////////////////////////////');
+  console.log(transactionPool);
+
+  console.log('__________________', _(transactionPool));
+
   const txIns = _(transactionPool)
     .map((tx) => tx.txIns)
     .flatten()
     .value();
+
   const removable = [];
+
   for (const unspentTxOut of unspentTxOuts) {
     const txIn = _.find(txIns, (aTxIn) => {
       return aTxIn.txOutIndex === unspentTxOut.txOutIndex && aTxIn.txOutId === unspentTxOut.txOutId;
@@ -125,15 +134,19 @@ const filterTxPoolTxs = (unspentTxOuts, transactionPool) => {
   return _.without(unspentTxOuts, ...removable);
 };
 
-const createTransaction = (receiverAddress, amount,
-  privateKey, unspentTxOuts, txPool) => {
+
+//트랜잭션 생성
+const createTransaction = (receiverAddress, amount, privateKey, unspentTxOuts, txPool) => {
   const { getPublicKey, TxIn, Transaction, signTxIn, getTransactionId } = require('./transaction')
   console.log('\n createTransaction 진입 : 블록 생성시 바디데이터에 코인베이스크랜잭션과 함께 담긴다.');
   const myAddress = getPublicKey(privateKey);
 
   //ch5
+  //uTxO들의 address에서 내 주소와 같은 것들을 골라냄.
   const myUnspentTxOutsA = unspentTxOuts.filter((uTxO) => uTxO.address === myAddress);
+  //
   const myUnspentTxOuts = filterTxPoolTxs(myUnspentTxOutsA, txPool);
+  console.log('myUnspentTxOuts--', myUnspentTxOuts);
 
   // filter from unspentOutputs such inputs that are referenced in pool
   const { includedUnspentTxOuts, leftOverAmount } = findTxOutsForAmount(amount, myUnspentTxOuts);

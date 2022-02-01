@@ -60,6 +60,7 @@ const JSONToObject = (data) => {
 };
 
 const initMessageHandler = (ws) => {
+  const { handleReceivedTransaction } = require('./blockchain')
   console.log(`\n initMessageHandler - S5. 메세지 핸들러에 진입합니다.`);
 
   ws.on('message', (data) => {

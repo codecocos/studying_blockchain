@@ -10,10 +10,10 @@ const COINBASE_AMOUNT = 50;
 
 class UnspentTxOut {
     constructor(txOutId, txOutIndex, address, amount) {
-        this.txOutId = txOutId;
-        this.txOutIndex = txOutIndex;
-        this.address = address;
-        this.amount = amount;
+        this.txOutId = txOutId; //txIns.txOutId
+        this.txOutIndex = txOutIndex; //txIns.txOutIndex
+        this.address = address; //txOuts.address
+        this.amount = amount; //txOuts.amount
     }
 }
 
@@ -35,9 +35,9 @@ class TxOut {
 
 class Transaction {
     constructor(id, txIns, txOuts) {
-        this.id = id;
-        this.txIns = txIns;
-        this.txOuts = txOuts;
+        this.id = id; // 트랜잭션의 아이디
+        this.txIns = txIns; // (txOutId, txOutIndex, signature)
+        this.txOuts = txOuts; // (address, amount)
     }
 }
 
@@ -234,25 +234,37 @@ const signTxIn = (transaction, txInIndex,
     return signature;
 };
 
+//aTransactions 을 aUnspentTxOuts 에 추가 한다
 const updateUnspentTxOuts = (aTransactions, aUnspentTxOuts) => {
     console.log('\n5.프로세스트랜잭션 통과후 updateUnspentTxOuts 진입');
     console.log('뉴트랜잭션', aTransactions);
     console.log('aUnspentTxOuts', aUnspentTxOuts);
     const newUnspentTxOuts = aTransactions
         .map((t) => {
+            //return 트랜잭션 클래스의 트랜잭션 아웃풋스            (txOutId, txOutIndex, address, amount)
+            //                                         (트랜잭션 클래스의 아이디, 인덱스, 트랜잭션 클래스의 트랜잭션아웃풋스의 주소와, 양)
             return t.txOuts.map((txOut, index) => new UnspentTxOut(t.id, index, txOut.address, txOut.amount));
         })
+        //.reduce((누적값, 현재값) => 결과, 초깃값);
+        //.reduce((a, b) => a와 배열과 b배열을 합쳐서 하나의 배열을 리턴함, []이 초기값에서 누적이 시작됨);
         .reduce((a, b) => a.concat(b), []);
+
+    console.log('/////////////////////////////newUnspentTxOuts');
+    console.log(newUnspentTxOuts);
 
     const consumedTxOuts = aTransactions
         .map((t) => t.txIns)
         .reduce((a, b) => a.concat(b), [])
-        .map((txIn) => new UnspentTxOut(txIn.txOutId, txIn.txOutIndex, '', 0));
+        .map((txIn) => new UnspentTxOut(txIn.txOutId, txIn.txOutIndex, '', 0)); //어드래스: '', 양 : 0
+    console.log('/////////////////////////////consumedTxOuts');
+    console.log(consumedTxOuts);
+
 
     const resultingUnspentTxOuts = aUnspentTxOuts
         .filter(((uTxO) => !findUnspentTxOut(uTxO.txOutId, uTxO.txOutIndex, consumedTxOuts)))
         .concat(newUnspentTxOuts);
-
+    console.log('/////////////////////////////resultingUnspentTxOuts');
+    console.log(resultingUnspentTxOuts);
     return resultingUnspentTxOuts;
 };
 
@@ -280,17 +292,22 @@ const getPublicKey = (aPrivateKey) => {
     return ec.keyFromPrivate(aPrivateKey, 'hex').getPublic().encode('hex');
 };
 
+//TxIn 구조 유효성 검사
 const isValidTxInStructure = (txIn) => {
     console.log("\n7-1. isValidTxInStructure 진입");
+    //입력값이 없을 때
     if (txIn == null) {
         console.log('txIn is null');
         return false;
+        // TxIn의 signature의 형식이 스트링이 아닐 때
     } else if (typeof txIn.signature !== 'string') {
         console.log('invalid signature type in txIn');
         return false;
+        // TxIn의 txOutId 형식이 스트링이 아닐 때
     } else if (typeof txIn.txOutId !== 'string') {
         console.log('invalid txOutId type in txIn');
         return false;
+        // TxIn의 txOutIndex의 형식이 숫자가 아닐 때
     } else if (typeof txIn.txOutIndex !== 'number') {
         console.log('invalid txOutIndex type in txIn');
         return false;
@@ -300,17 +317,22 @@ const isValidTxInStructure = (txIn) => {
     }
 };
 
+//TxOut 구조 유효성 검사
 const isValidTxOutStructure = (txOut) => {
     console.log('\n7-3. isValidTxOutStructure 진입');
+    //입력값이 없을 때
     if (txOut == null) {
         console.log('txOut is null');
         return false;
+        //TxOut 클래스의 address 형식이 스트링이 아닐 때
     } else if (typeof txOut.address !== 'string') {
         console.log('invalid address type in txOut');
         return false;
+        //isValidAddress 의 리턴값이 false인 경우
     } else if (!isValidAddress(txOut.address)) {
         console.log('invalid TxOut address');
         return false;
+        //TxOut 클래스의 amount 형식이 숫자가 아닐 때
     } else if (typeof txOut.amount !== 'number') {
         console.log('invalid amount type in txOut');
         return false;
@@ -332,20 +354,28 @@ const isValidTxOutStructure = (txOut) => {
 const isValidTransactionStructure = (transaction) => {
     console.log('\n7. isValidTransactionStructure(단수) 진입');
 
+    //Transaction 클래스의 id의 타입이 스트링일 때
     if (typeof transaction.id !== 'string') {
         console.log('transactionId missing');
         return false;
     }
+    //Transaction 클래스의 txIns가 배열이 아닐 경우
+    //instanceof : 개체가 특정 클래스의 인스턴스인지 여부를 나타내는 boolean값으로 반환하는 비교연산자
     if (!(transaction.txIns instanceof Array)) {
         console.log('invalid txIns type in transaction');
         return false;
     }
+
+    //Transaction 클래스의 txIns가 배열이고 그 값이
     if (!transaction.txIns
+        //true인 경우들을
         .map(isValidTxInStructure)
+        //a와 배열과 b배열을 합쳐서 하나의 배열을 리턴함, 초기값은 true에서 시작됨);
         .reduce((a, b) => (a && b), true)) {
         return false;
     }
 
+    //Transaction 클래스의 txOuts 배열이 아닐 경우
     if (!(transaction.txOuts instanceof Array)) {
         console.log('invalid txIns type in transaction');
         return false;

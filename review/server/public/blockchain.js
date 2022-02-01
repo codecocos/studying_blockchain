@@ -17,28 +17,33 @@ class Block {
 }
 
 const genesisTransaction = {
+  'id': 'e655f6a5f26dc9b4cac6e46f52336428287759cf81ef5ff10854f69d68f43fa3',
   'txIns': [{ 'signature': '', 'txOutId': '', 'txOutIndex': 0 }],
   'txOuts': [{
     'address': '04bfcab8722991ae774db48f934ca79cfb7dd991229153b9f732ba5334aafcd8e7266e47076996b55a14bf9913ee3145ce0cfc1372ada8ada74bd287450313534a',
     'amount': 50
   }],
-  'id': 'e655f6a5f26dc9b4cac6e46f52336428287759cf81ef5ff10854f69d68f43fa3'
 };
 
 const genesisBlock = new Block(
-  0,
-  '91a73664bc84c0baa1fc75ea6e4aa6d1d20c5df664c724e3159aefc2e1186627',
-  '',
-  1465154705,
-  [genesisTransaction],
-  0,
-  0
+  0, //index
+  '91a73664bc84c0baa1fc75ea6e4aa6d1d20c5df664c724e3159aefc2e1186627', //hash
+  '', //previousHash
+  1465154705, //timestamp
+  [genesisTransaction], //data
+  0, //difficulty
+  0 //nonce
 );
 
+//genesisBlock.data = 
+//blockchain[0].data
 let blockchain = [genesisBlock];
+
+console.log(genesisBlock.data);
 
 
 // the unspent txOut of genesis block is set to unspentTxOuts on startup
+//                                   (aTransactions, aUnspentTxOuts, blockIndex)
 let unspentTxOuts = processTransactions(blockchain[0].data, [], 0);
 
 const getBlockchain = () => blockchain;
@@ -169,10 +174,18 @@ const getAccountBalance = () => {
   return getBalance(getPublicFromWallet(), getUnspentTxOuts());
 };
 
+//트랜잭션 전송(나 -> 상대방)
 const sendTransaction = (address, amount) => {
+  console.log('\n sendTransaction - SR2. (address, amount) 을 인자로 받습니다.');
+  console.log('\n sendTransaction \n - createTransaction(address, amount, getPrivateFromWallet(), getUnspentTxOuts(), getTransactionPool()) \n - addToTransactionPool(tx, getUnspentTxOuts()) \n - broadCastTransactionPool()\n');
   const { createTransaction, getPrivateFromWallet } = require('./wallet');
   const { broadCastTransactionPool } = require('./p2pServer')
+
+  //트랜잭션 생성(receiverAddress, amount, privateKey, unspentTxOuts, txPool)
   const tx = createTransaction(address, amount, getPrivateFromWallet(), getUnspentTxOuts(), getTransactionPool());
+
+  console.log("tx--", tx);
+
   addToTransactionPool(tx, getUnspentTxOuts());
   broadCastTransactionPool();
   return tx;

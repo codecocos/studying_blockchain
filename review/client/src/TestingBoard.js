@@ -125,6 +125,21 @@ function TestingBoard() {
         JSON.stringify(data);
     });
   }
+  // function blockHash() {
+  //   axios.post(`/api/test/block/:hash`).then((res) => {
+  //     const data = res.data;
+  //     document.getElementById("writefield").innerText =
+  //       JSON.stringify(data);
+  //   });
+  // }
+
+  function genesisBlockData() {
+    axios.post(`/api/test/genesisBlockData`).then((res) => {
+      const data = res.data;
+      document.getElementById("writefield").innerText =
+        JSON.stringify(data);
+    });
+  }
 
 
   return (
@@ -204,6 +219,16 @@ function TestingBoard() {
         <li>
           <button id="stop" onClick={() => stop()}>
             stop
+          </button>
+        </li>
+        {/* <li>
+          <button id="blockHash" onClick={() => blockHash()}>
+          blockHash
+          </button>
+        </li> */}
+        <li>
+          <button id="genesisBlockData" onClick={() => genesisBlockData()}>
+            genesisBlockData
           </button>
         </li>
       </ol>
