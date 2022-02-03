@@ -177,6 +177,7 @@ router.post('/transaction/:id', (req, res) => {
 router.post('/address/:address', (req, res) => {
   const unspentTxOuts =
     _.filter(getUnspentTxOuts(), (uTxO) => uTxO.address === req.params.address)
+
   res.send({ 'unspentTxOuts': unspentTxOuts });
 });
 

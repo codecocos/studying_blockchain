@@ -7,16 +7,23 @@ const privateKeyLocation = "wallet/" + (process.env.PRIVATE_KEY || "default");
 const privateKeyFile = privateKeyLocation + "/private_key";
 
 function initWallet() {
+  //privateKeyFile가 경로 내에 존재한다면
   if (fs.existsSync(privateKeyFile)) {
+    //publickey 보여주기
     console.log("기존 지갑 경로 : " + privateKeyFile);
     return { message: "기존지갑경로가 있습니다.", address: getPublicFromWallet() };
   }
+  // wallet 폴더가 존재하지 않는다면
   if (!fs.existsSync("wallet/")) {
+    // wallet 폴더 생성해주기
     fs.mkdirSync("wallet/");
   }
+  // wallet 폴더 아래 추가 폴더가 없다면 
   if (!fs.existsSync(privateKeyLocation)) {
+    // 추가 폴더 생성해주기
     fs.mkdirSync(privateKeyLocation);
   }
+
 
   const newPrivateKey = generatePrivatekey();
   fs.writeFileSync(privateKeyFile, newPrivateKey);
@@ -25,13 +32,19 @@ function initWallet() {
   return { message: "지갑이 잘 생성되었습니다.", address: getPublicFromWallet() };
 }
 
+//프라이빗키 생성하기
 function generatePrivatekey() {
+  // ec 모듈 사용하여 키페어 생성하기(개인키와 공개키)
   const keyPair = ec.genKeyPair();
+  // 생성한 키페어세서 공개키 가져오기
   const privatekey = keyPair.getPrivate();
+  //가져온 공개키를 스트링 값으로 변환하여 리턴, 스트링값은 16진수에 해당하도록 한다.
   return privatekey.toString(16);
 }
 
+//개인키 가져오기
 function getPrivateFromWallet() {
+
   const buffer = fs.readFileSync(privateKeyFile, "utf8");
   return buffer.toString();
 }
@@ -43,6 +56,7 @@ function getPublicFromWallet() {
 }
 
 
+console.log('generatePrivatekey::: 개인키!\n', generatePrivatekey());
 console.log('getPublicFromWallet::: 지갑 주소!\n', getPublicFromWallet());
 
 //////////////////////

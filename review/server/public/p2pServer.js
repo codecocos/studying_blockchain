@@ -23,8 +23,8 @@ const initP2PServer = (p2pPort) => {
   server.on('connection', (ws) => {
 
     console.log(`\n initP2PServer - S3. ${p2pPort} 소켓 서버 접속완료\n (connectToPeers 가 작동 할 때 실행됩니다.) `);
-    console.log("sockets 배열을 확인해봅시다", sockets)
     console.log("server을 확인해봅시다", server)
+    console.log('ws', ws);
     //나에게 접속한 클라이언트끼리 통신할 수 있게 sockets에 넣는다.
     initConnection(ws);
   });
@@ -37,8 +37,8 @@ const getSockets = () => sockets;
 const initConnection = (ws) => {
 
   console.log(`\n initConnection - S4. 소켓 배열에 푸쉬됩니다.  [${sockets}]`);
-  console.log([11111]);
   sockets.push(ws);
+  console.log("소켓 배열에 푸쉬된 후의 전체 소켓배열", sockets);
 
   initMessageHandler(ws);
   initErrorHandler(ws);
@@ -130,12 +130,19 @@ const write = (ws, message) => {
 
 const broadcast = (message) => sockets.forEach((socket) => write(socket, message));
 
-const queryChainLengthMsg = () => ({ 'type': MessageType.QUERY_LATEST, 'data': null });
+const queryChainLengthMsg = () => ({
+  'type': MessageType.QUERY_LATEST,
+  'data': null
+});
 
-const queryAllMsg = () => ({ 'type': MessageType.QUERY_ALL, 'data': null });
+const queryAllMsg = () => ({
+  'type': MessageType.QUERY_ALL,
+  'data': null
+});
 
 const responseChainMsg = () => ({
-  'type': MessageType.RESPONSE_BLOCKCHAIN, 'data': JSON.stringify(getBlockchain())
+  'type': MessageType.RESPONSE_BLOCKCHAIN,
+  'data': JSON.stringify(getBlockchain())
 });
 
 const responseLatestMsg = () => ({
