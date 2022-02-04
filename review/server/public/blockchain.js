@@ -74,6 +74,10 @@ const getDifficulty = (aBlockchain) => {
 
   //가장 마지막 블록의 인덱스를 10으로 나누었을 때 나머지가 0 이면서, 가장 마지막 블록의 인덱스가 0이 아닌경우(즉, 제네시스 블록이 아닌 경우)
   if (latestBlock.index % DIFFICULTY_ADJUSTMENT_INTERVAL === 0 && latestBlock.index !== 0) {
+
+    if (latestBlock.difficulty === 0) {
+      return latestBlock.difficulty;
+    }
     //조정된 difficulty를 반환한다.
     return getAdjustedDifficulty(latestBlock, aBlockchain);
     //마지막 블록을 10으로 나눈 나머지 값이 1~9 사이거나, 제네시스 블록인 경우
@@ -97,6 +101,12 @@ const getAdjustedDifficulty = (latestBlock, aBlockchain) => {
     // 실제 걸린 시간이 (예상시간/2) 의 값 보다 작은 경우가 아니면서,
     // 실제 걸린 시간이 (예상된 시간의 두배) 보다 큰 경우
   } else if (timeTaken > timeExpected * 2) {
+
+    //난이도 조정 에러시
+    // if (prevAdjustmentBlock.difficulty === 0) {
+    //   return prevAdjustmentBlock.difficulty
+    // }
+
     // 조정 전 블록의 difficulty에서 -1 한다.
     return prevAdjustmentBlock.difficulty - 1;
 
