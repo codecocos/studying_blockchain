@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../src/css/index.css';
 import { BrowserRouter } from 'react-router-dom';
+
+import '../src/css/index.css';
 
 import TestingBoard from './TestingBoard';
 
