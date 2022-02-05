@@ -1,0 +1,80 @@
+WebSocketServer {
+  _events: [Object: null prototype] { connection: [Function (anonymous)] },
+  _eventsCount: 1,
+  _maxListeners: undefined,
+  _server: <ref *1> Server {
+    maxHeaderSize: undefined,
+    insecureHTTPParser: undefined,
+    _events: [Object: null prototype] {
+      request: [Function (anonymous)],
+      connection: [Function: connectionListener],
+      listening: [Function: bound emit],
+      error: [Function: bound emit],
+      upgrade: [Function: upgrade]
+    },
+    _eventsCount: 5,
+    _maxListeners: undefined,
+    _connections: 1,
+    _handle: TCP {
+      reading: false,
+      onconnection: [Function: onconnection],
+      [Symbol(owner_symbol)]: [Circular *1]
+    },
+    _usingWorkers: false,
+    _workers: [],
+    _unref: false,
+    allowHalfOpen: true,
+    pauseOnConnect: false,
+    httpAllowHalfOpen: false,
+    timeout: 0,
+    keepAliveTimeout: 5000,
+    maxHeadersCount: null,
+    headersTimeout: 60000,
+    requestTimeout: 0,
+    _connectionKey: '6::::6001',
+    [Symbol(IncomingMessage)]: [Function: IncomingMessage],
+    [Symbol(ServerResponse)]: [Function: ServerResponse],
+    [Symbol(kCapture)]: false,
+    [Symbol(async_id_symbol)]: 13
+  },
+  _removeListeners: [Function: removeListeners],
+  clients: Set(1) {
+    WebSocket {
+      _events: [Object: null prototype],
+      _eventsCount: 1,
+      _maxListeners: undefined,
+      _binaryType: 'nodebuffer',
+      _closeCode: 1006,
+      _closeFrameReceived: false,
+      _closeFrameSent: false,
+      _closeMessage: <Buffer >,
+      _closeTimer: null,
+      _extensions: {},
+      _paused: false,
+      _protocol: '',
+      _readyState: 1,
+      _receiver: [Receiver],
+      _sender: [Sender],
+      _socket: [Socket],
+      _isServer: true,
+      [Symbol(kCapture)]: false
+    }
+  },
+  _shouldEmitClose: false,
+  options: {
+    maxPayload: 104857600,
+    skipUTF8Validation: false,
+    perMessageDeflate: false,
+    handleProtocols: null,
+    clientTracking: true,
+    verifyClient: null,
+    noServer: false,
+    backlog: null,
+    server: null,
+    host: null,
+    path: null,
+    port: 6001
+  },
+  _state: 0,
+  [Symbol(kCapture)]: false
+ 

@@ -1,0 +1,26 @@
+{
+  "name": "coco",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/webAndSocket"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
+    "debug": "~2.6.9",
+    "dotenv": "^14.3.2",
+    "elliptic": "^6.5.4",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "lodash": "^4.17.21",
+    "merkle": "^0.6.0",
+    "morgan": "~1.9.1",
+    "pug": "2.0.0-beta11",
+    "ws": "^8.4.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
