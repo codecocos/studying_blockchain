@@ -234,7 +234,7 @@ const Dashboard = () => {
               />
             </div>
             <div className="card__footer">
-              <Link to="/customers">view all</Link>
+              <Link to="/blockchain">view all</Link>
             </div>
           </div>
         </div>

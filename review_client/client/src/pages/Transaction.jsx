@@ -12,6 +12,9 @@ const Transaction = () => {
   const [transactionPool, setTransactionPool] = useState([]);
   const [transaction, setTransaction] = useState([]);
 
+  // const txIns = transaction.txins || [];
+  // const txOuts = transaction.txOuts || [];
+
   useEffect(() => {
     getMyAddress();
     getMyBalance();
@@ -49,26 +52,45 @@ const Transaction = () => {
       .then((res) => {
         const data = res.data;
         setTransaction(data);
-        document.getElementById("writefield").innerText = JSON.stringify(data);
       });
+    getTransactionPool();
   }
-  console.log(111111);
-  console.log(transaction);
+
+  function mineTransactionPool() {
+    axios.post("/api/test/mineBlock").then((res) => {});
+
+    getMyBalance();
+    getTransactionPool();
+  }
+
+  function getTransactionPool() {
+    axios.post("/api/test/transactionPool").then((res) => {
+      const transactionPool = res.data.transactionPool;
+
+      setTransactionPool(transactionPool);
+    });
+  }
 
   const renderTxIns = (item, index) => (
     <div key={index}>
       <br />
-      <div>
-        <strong>txOutId : </strong>
-        {item.txOutId}
+      <div className="row">
+        <div className="col-1-1">
+          <strong>txOutId</strong>
+        </div>
+        <div className="col-10">{item.txOutId}</div>
       </div>
-      <div>
-        <strong>txOutIndex : </strong>
-        {item.txOutIndex}
+      <div className="row">
+        <div className="col-1-1">
+          <strong>txOutIndex</strong>
+        </div>
+        <div className="col-10">{item.txOutIndex}</div>
       </div>
-      <div>
-        <strong>signature :</strong>
-        {item.signature}
+      <div className="row">
+        <div className="col-1-1">
+          <strong>signature</strong>
+        </div>
+        <div className="col-10">{item.signature}</div>
       </div>
       <br />
     </div>
@@ -76,65 +98,45 @@ const Transaction = () => {
   const renderTxOuts = (item, index) => (
     <div key={index}>
       <br />
-      <div>
-        <strong>address : </strong>
-        {item.address}
+      <div className="row">
+        <div className="col-1-1">
+          <strong>address</strong>
+        </div>
+        <div className="col-10">{item.address}</div>
       </div>
-      <div>
-        <strong>amount : </strong>
-        {item.amount}
+      <div className="row">
+        <div className="col-1-1">
+          <strong>amount</strong>
+        </div>
+        <div className="col-10">{item.amount}</div>
       </div>
       <br />
     </div>
   );
 
   const renderTxPool = (item, index) => (
-    <div key={index}>
-      <br />
-      <div>
-        <strong>id : </strong>
-        {item.address}
+    <div className="card_1">
+      <div key={index}>
+        <br />
+        <div className="row">
+          <div className="col-1-1">
+            <div className="card__title__2">id</div>
+          </div>
+          <div className="col-10">{item.id}</div>
+        </div>
+        <br />
+        <div>
+          <div className="card__title__2">txIns</div>
+          {item.txIns.map((item, index) => renderTxIns(item, index))}
+        </div>
+        <div>
+          <div className="card__title__2">txOuts</div>
+          {item.txOuts.map((item, index) => renderTxOuts(item, index))}
+        </div>
+        <br />
       </div>
-      <div>
-        <strong>txIns : </strong>
-        {item.amount}
-      </div>
-      <div>
-        <strong>txOuts : </strong>
-        {item.amount}
-      </div>
-      <br />
     </div>
   );
-
-  const txIns = transaction.txIns || [];
-  const txOuts = transaction.txOuts || [];
-
-  function mineTransactionPool() {
-    axios.post("/api/test/mineBlock").then((res) => {
-      const data = res.data;
-      const transactionData = res.data.data;
-
-      document.getElementById("writefield").innerText =
-        JSON.stringify(transactionData);
-    });
-
-    getMyBalance();
-  }
-
-  function getTransactionPool() {
-    axios.post("/api/test/transactionPool").then((res) => {
-      const data = res.data;
-      const transactionPool = res.data.transactionPool;
-
-      setTransactionPool(transactionPool);
-
-      document.getElementById("writefield").innerText =
-        JSON.stringify(transactionPool);
-    });
-  }
-
-  console.log(transactionPool);
 
   return (
     <div>
@@ -161,40 +163,45 @@ const Transaction = () => {
                   value={ToAddress}
                   required
                 />
+              </div>
+            </div>
+            <div className="col-11">
+              <div className="row">
                 <CustomButton
                   type={"submit"}
                   content={"Send Transaction"}
                   onClick={sendTransaction}
                 />
-              </div>
-              <div className="row">
                 <CustomButton
                   type={"submit"}
                   content={"Mine Transaction Pool"}
                   onClick={mineTransactionPool}
                 />
-                <CustomButton
+                {/* <CustomButton
                   type={"submit"}
                   content={"Get Transaction Pool"}
                   onClick={getTransactionPool}
-                />
+                /> */}
               </div>
             </div>
-            <div className="card__title">방금 전송한 트랜잭션</div>
-            <div className="card__text">id</div>
-            <div className="card__text">{transaction.id}</div>
-            <div className="card__text">
-              txIns{txIns.map((item, index) => renderTxIns(item, index))}
-            </div>
-            <div className="card__text">
-              txOuts{txOuts.map((item, index) => renderTxOuts(item, index))}
-            </div>
+
+            {/* <div className="card__title">방금 전송한 트랜잭션</div>
+            <div className="card_1">
+              <div className="card__text">id</div>
+              <div className="card__text">{transaction.id}</div>
+              <div className="card__text">
+                txIns{txIns.map((item, index) => renderTxIns(item, index))}
+              </div>
+              <div className="card__text">
+                txOuts{txOuts.map((item, index) => renderTxOuts(item, index))}
+              </div>
+            </div> */}
             <div className="card__title">Transaction Pool</div>
             <div className="card__text">
-              {txOuts.map((item, index) => renderTxOuts(item, index))}
+              {transactionPool.map((item, index) => renderTxPool(item, index))}
             </div>
-            <div className="card__title">서버 응답 결과</div>
-            <div id="writefield"></div>
+            {/* <div className="card__title">서버 응답 결과</div>
+            <div id="writefield"></div> */}
           </div>
         </div>
       </div>

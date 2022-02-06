@@ -356,6 +356,7 @@ const addBlockToChain = (newBlock) => {
   const { processTransactions } = require("./transaction");
 
   if (isValidNewBlock(newBlock, getLatestBlock())) {
+
     const retVal = processTransactions(newBlock.data, getUnspentTxOuts(), newBlock.index);
     if (retVal === null) {
       console.log('block is not valid in terms of transactions : \n블럭 생성 실패');
