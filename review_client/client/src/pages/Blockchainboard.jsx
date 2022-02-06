@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import Table from "../components/table/Table";
 
-import customerList from "../assets/JsonData/customers-list.json";
+import axios from "axios";
 
-const customerTableHead = [
+const blockchainTableHead = [
   "index",
   "hash",
   "previousHash",
   "timestamp",
-  "data",
+  // "data",
   "difficulty",
   "nonce",
 ];
@@ -18,17 +18,30 @@ const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const renderBody = (item, index) => (
   <tr key={index}>
-    <td>{item.id}</td>
-    <td>{item.name}</td>
-    <td>{item.email}</td>
-    <td>{item.phone}</td>
-    <td>{item.total_orders}</td>
-    <td>{item.total_spend}</td>
-    <td>{item.location}</td>
+    <td>{item.index}</td>
+    <td>{item.hash}</td>
+    <td>{item.previousHash}</td>
+    <td>{item.timestamp}</td>
+    {/* <td>{item.data}</td> */}
+    <td>{item.difficulty}</td>
+    <td>{item.nonce}</td>
   </tr>
 );
 
-const Customers = () => {
+const Blockchainboard = () => {
+  const [blockchain, SetBlockchain] = useState([]);
+
+  useEffect(() => {
+    getBlockchain();
+  }, []);
+
+  function getBlockchain() {
+    axios.post("/api/test/blocks").then((res) => {
+      const data = res.data;
+      SetBlockchain(data.blockchain);
+    });
+  }
+
   return (
     <div>
       <h2 className="page-header">Blockchain</h2>
@@ -38,9 +51,9 @@ const Customers = () => {
             <div className="card__body">
               <Table
                 limit="10"
-                headData={customerTableHead}
+                headData={blockchainTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
-                bodyData={customerList}
+                bodyData={blockchain}
                 renderBody={(item, index) => renderBody(item, index)}
               />
             </div>
@@ -51,4 +64,4 @@ const Customers = () => {
   );
 };
 
-export default Customers;
+export default Blockchainboard;

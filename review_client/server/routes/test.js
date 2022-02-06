@@ -2,14 +2,84 @@ const express = require('express')
 const router = express.Router()
 const _ = require('lodash');
 
+const transactionPool = require('../../transactionPool.json')
+
 const { generateNextBlock, generatenextBlockWithTransaction, getAccountBalance, getBlockchain, generateRawNextBlock,
   getMyUnspentTransactionOutputs, getUnspentTxOuts, sendTransaction } = require('../public/blockchain')
 const { connectToPeers, getSockets, initP2PServer } = require('../public/p2pServer')
 const { initWallet, getPublicFromWallet } = require('../public/wallet')
 const { getTransactionPool } = require('../public/transactionPool')
 
+router.post('/qwe', (req, res) => {
+  const aa = _(transactionPool)
+    .map((tx) => (tx.id))
+    .value()
+  const bb = _(transactionPool)
+    .map((tx) => (tx.txIns))
+    .value()
+  const cc = _(transactionPool)
+    .map((tx) => (tx.txOuts))
+    .value()
+  console.log('123//////////////////////////////////////////////////////////////////////////////////////////////////');
+  console.log(transactionPool);
+  console.log('id');
+  console.log(transactionPool[0].id);
+  console.log('txIns');
+  console.log(transactionPool[0].txIns);
+  console.log('txOuts');
+  console.log(transactionPool[0].txOuts);
+  res.send(transactionPool)
+  //res.send({ aa, bb, cc })
+
+})
+
+router.post('/allBlocks', (req, res) => {
+  const allBlocks = getBlockchain()
+
+  const transaction2 = _(allBlocks)
+    .map((block) => (
+      block.index,
+      block.hash,
+      block.previousHash,
+      block.timestamp,
+      block.difficulty,
+      block.nonce
+    ))
+    .value()
+
+  const transaction = _(allBlocks)
+    .map((block) => (block.data))
+    .flatten()
+    .value()
+
+  const txId = _(transaction)
+    .map((tx) => (tx.id))
+    .flatten()
+    .value()
+
+  const txIns = _(transaction)
+    .map((tx) => (tx.txIns))
+    .flatten()
+    .value()
+
+  const txOuts = _(transaction)
+    .map((tx) => (tx.txOuts))
+    .flatten()
+    .value()
+
+  res.send(
+    {
+      id: txId,
+      txIns: txIns,
+      txOuts: txOuts
+    }
+  );
+});
+
 router.post('/blocks', (req, res) => {
-  res.send(getBlockchain());
+  const blockchain = getBlockchain()
+
+  res.send({ blockchain: blockchain });
 });
 
 //바디데이터 입력없는 경우 : 코인베이스 트랜잭션
@@ -89,8 +159,6 @@ router.post('/peers', (req, res) => {
   res.send(getSockets().map((s) => s._socket.remoteAddress + ':' + s._socket.remotePort));
 });
 
-
-
 router.post('/addPeer', (req, res) => {
   console.log(`\n [route(/addPeer)] 애드피어 진입주소 : ${req.body.data}`)
 
@@ -103,17 +171,14 @@ router.post('/addPeer', (req, res) => {
 
 router.post('/balance', (req, res) => {
   console.log('잔고를 보여줍니다~~~~~~');
-
   const balance = getAccountBalance()
-  console.log(1111, balance);
-
   res.send({ balance: balance })
 })
 
 router.post('/mineTransaction', (req, res) => {
   const address = req.body.address;
   const amount = parseInt(req.body.amount);
-  console.log(address);
+
   try {
     const resp = generatenextBlockWithTransaction(address, amount);
     res.send(resp);
@@ -152,7 +217,8 @@ router.post('/sendTransaction', (req, res) => {
 });
 
 router.post('/transactionPool', (req, res) => {
-  res.send(getTransactionPool());
+  const transactionPool = getTransactionPool()
+  res.send({ transactionPool: transactionPool });
 });
 
 router.post('/stop', (req, res) => {

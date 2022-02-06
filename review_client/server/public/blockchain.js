@@ -98,6 +98,9 @@ const getAdjustedDifficulty = (latestBlock, aBlockchain) => {
     // 실제 걸린 시간이 (예상된 시간의 두배) 보다 큰 경우
   } else if (timeTaken > timeExpected * 2) {
     // 조정 전 블록의 difficulty에서 -1 한다.
+    if (prevAdjustmentBlock.difficulty === 0) {
+      return prevAdjustmentBlock.difficulty
+    }
     return prevAdjustmentBlock.difficulty - 1;
 
   } else {

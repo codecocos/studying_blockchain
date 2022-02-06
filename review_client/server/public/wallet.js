@@ -56,8 +56,8 @@ function getPublicFromWallet() {
 }
 
 
-console.log('generatePrivatekey::: 개인키!\n', generatePrivatekey());
-console.log('getPublicFromWallet::: 지갑 주소!\n', getPublicFromWallet());
+// console.log('generatePrivatekey::: 개인키!\n', generatePrivatekey());
+// console.log('getPublicFromWallet::: 지갑 주소!\n', getPublicFromWallet());
 
 //////////////////////
 

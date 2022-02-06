@@ -95,6 +95,13 @@ input:focus {
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
 }
+.card_1 {
+  padding: 30px;
+  margin-bottom: 30px;
+  background-color: var(--second-bg);
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+}
 
 .full-height {
   height: 100%;
@@ -104,8 +111,18 @@ input:focus {
   height: calc(100% - 30px);
 }
 
-.card__header {
+.card__title {
   text-transform: capitalize;
+  font-size: 1.5rem;
+  font-weight: 600;
+  word-break: break-all;
+  /* margin-bottom: 10px; */
+}
+
+.card__text {
+  /* text-transform: capitalize; */
+  margin-left: 1rem;
+  word-break: break-all;
 }
 
 .card > div ~ div {
