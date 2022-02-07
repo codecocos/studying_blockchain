@@ -1,6 +1,6 @@
 [
   {
-    "display_name": "Dashboard",
+    "display_name": "Dash Board",
     "route": "/",
     "icon": "bx bx-category-alt"
   },
@@ -10,13 +10,13 @@
     "icon": "bx bx-cube"
   },
   {
-    "display_name": "Testing board",
-    "route": "/testing",
-    "icon": "bx bx-cog"
-  },
-  {
     "display_name": "Transaction",
     "route": "/transaction",
     "icon": "bx bx-transfer-alt"
+  },
+  {
+    "display_name": "Testing board",
+    "route": "/testing",
+    "icon": "bx bx-cog"
   }
 ]

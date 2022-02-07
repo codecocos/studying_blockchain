@@ -6,7 +6,6 @@ import axios from "axios";
 
 const Blockchainboard = () => {
   const [blockchain, SetBlockchain] = useState([]);
-  const reverseBlockchian = [...blockchain].reverse(); //배열 뒤집기
 
   useEffect(() => {
     getBlockchain();
@@ -23,14 +22,20 @@ const Blockchainboard = () => {
 
   console.log(blockchain);
 
+  const mapping = blockchain.map((tx) => tx.data);
+  console.log(mapping);
+
   const blockchainTableHead = [
-    "index",
-    "hash",
-    "previousHash",
+    "height",
+    // "hash",
+    // "previousHash",
     "timestamp",
     // "data",
-    "difficulty",
-    "nonce",
+    // "difficulty",
+    // "nonce",
+    "mined",
+    "transaction",
+    "size",
   ];
 
   const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -38,12 +43,15 @@ const Blockchainboard = () => {
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{item.index}</td>
-      <td>{item.hash}</td>
-      <td>{item.previousHash}</td>
+      {/* <td>{item.hash}</td>
+      <td>{item.previousHash}</td> */}
       <td>{item.timestamp}</td>
-      {/* <td>{item.data}</td> */}
+      {/* <td>{item.data}</td>
       <td>{item.difficulty}</td>
-      <td>{item.nonce}</td>
+      <td>{item.nonce}</td> */}
+      <td>a</td>
+      <td>a</td>
+      <td>a</td>
     </tr>
   );
 
@@ -58,7 +66,7 @@ const Blockchainboard = () => {
                 limit="10"
                 headData={blockchainTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
-                bodyData={reverseBlockchian}
+                bodyData={blockchain}
                 renderBody={(item, index) => renderBody(item, index)}
               />
             </div>

@@ -140,98 +140,124 @@ function TestingBoard() {
     });
   }
 
+  const olstyle = {
+    fontSize: '1.5rem',
+    marginLeft: '2rem',
+    backgroundColor: '#2d2d2d',
+  };
+  const btnstyle = {
+    fontSize: '1.5rem',
+    margin: '4px',
+    backgroundColor: '#2d2d2d',
+  };
 
   return (
     <div>
-      <h2>테스트 코드</h2>
-      <ol>
-        <li>
-          <button id="blocks" onClick={() => block()}>
-            get blocks
-          </button>
-        </li>
-        <li>
-          <button id="mineBlock" onClick={() => mineBlock()}>
-            mineBlock(바디데이터 입력 없는 경우)
-          </button>
-        </li>
-        <li>
-          <button id="mineRawBlock" onClick={() => mineRawBlock()}>
-            mineRawBlock(바디데이터 입력 있는 경우)
-          </button>
-        </li>
-        <li>
-          <button id="initWallet" onClick={() => initWallet()}>
-            initWallet
-          </button>
-        </li>
-        <li>
-          <button id="getAddress" onClick={() => getAddress()}>
-            getAddress
-          </button>
-        </li>
-        <li>
-          <button id="socketOn" onClick={() => socketOn()}>
-            socketOn : 웹소켓서버오픈 및 접속
-          </button>
-        </li>
-        <li>
-          <button id="peers" onClick={() => peers()}>
-            peers : 피어 목록 불러오기
-          </button>
-        </li>
-        <li>
-          <button id="addPeer" onClick={() => addPeer()}>
-            addPeer : 피어 추가 하기
-          </button>
-        </li>
-        <li>
-          <button id="balance" onClick={() => balance()}>
-            balance
-          </button>
-        </li>
-        <li>
-          <button id="mineTransaction" onClick={() => mineTransaction()}>
-            mineTransaction
-          </button>
-        </li>
-        <li>
-          <button id="unspentTransactionOutputs" onClick={() => unspentTransactionOutputs()}>
-            unspentTransactionOutputs
-          </button>
-        </li>
-        <li>
-          <button id="myUnspentTransactionOutputs" onClick={() => myUnspentTransactionOutputs()}>
-            myUnspentTransactionOutputs
-          </button>
-        </li>
-        <li>
-          <button id="sendTransaction" onClick={() => sendTransaction()}>
-            sendTransaction
-          </button>
-        </li>
-        <li>
-          <button id="transactionPool" onClick={() => transactionPool()}>
-            transactionPool
-          </button>
-        </li>
-        <li>
-          <button id="stop" onClick={() => stop()}>
-            stop
-          </button>
-        </li>
-        {/* <li>
-          <button id="blockHash" onClick={() => blockHash()}>
-          blockHash
-          </button>
-        </li> */}
-        <li>
-          <button id="genesisBlockData" onClick={() => genesisBlockData()}>
-            genesisBlockData
-          </button>
-        </li>
-      </ol>
-      <div id="writefield"></div>
+      <h2 className="page-header">Testing Board</h2>
+      <div className="row">
+        <div className="col-12">
+          <div className="card">
+            <div className="card__body">
+              <div className="card__text">
+                <ol style={olstyle}>
+                  <li>
+                    <button id="blocks" onClick={() => block()} style={btnstyle}>
+                      get blocks
+                    </button>
+                  </li>
+                  <li>
+                    <button id="mineBlock" onClick={() => mineBlock()} style={btnstyle}>
+                      mineBlock
+                    </button>
+                  </li>
+                  <li>
+                    <button id="mineRawBlock" onClick={() => mineRawBlock()} style={btnstyle}>
+                      mineRawBlock
+                    </button>
+                  </li>
+                  <li>
+                    <button id="initWallet" onClick={() => initWallet()} style={btnstyle}>
+                      initWallet
+                    </button>
+                  </li>
+                  <li>
+                    <button id="getAddress" onClick={() => getAddress()} style={btnstyle}>
+                      getAddress
+                    </button>
+                  </li>
+                  <li>
+                    <button id="socketOn" onClick={() => socketOn()} style={btnstyle}>
+                      socketOn
+                    </button>
+                  </li>
+                  <li>
+                    <button id="peers" onClick={() => peers()} style={btnstyle}>
+                      peers
+                    </button>
+                  </li>
+                  <li>
+                    <button id="addPeer" onClick={() => addPeer()} style={btnstyle}>
+                      addPeer
+                    </button>
+                  </li>
+                  <li>
+                    <button id="balance" onClick={() => balance()} style={btnstyle}>
+                      balance
+                    </button>
+                  </li>
+                  <li>
+                    <button id="mineTransaction" onClick={() => mineTransaction()} style={btnstyle}>
+                      mineTransaction
+                    </button>
+                  </li>
+                  <li>
+                    <button id="unspentTransactionOutputs" onClick={() => unspentTransactionOutputs()} style={btnstyle}>
+                      unspentTransactionOutputs
+                    </button>
+                  </li>
+                  <li>
+                    <button id="myUnspentTransactionOutputs" onClick={() => myUnspentTransactionOutputs()} style={btnstyle}>
+                      myUnspentTransactionOutputs
+                    </button>
+                  </li>
+                  <li>
+                    <button id="sendTransaction" onClick={() => sendTransaction()} style={btnstyle}>
+                      sendTransaction
+                    </button>
+                  </li>
+                  <li>
+                    <button id="transactionPool" onClick={() => transactionPool()} style={btnstyle}>
+                      transactionPool
+                    </button>
+                  </li>
+                  <li>
+                    <button id="stop" onClick={() => stop()} style={btnstyle}>
+                      stop
+                    </button>
+                  </li>
+                  {/* 
+                  <li>
+                    <button id="blockHash" onClick={() => blockHash()}>
+                      blockHash
+                    </button>
+                  </li> 
+                    */}
+                  <li>
+                    <button id="genesisBlockData" onClick={() => genesisBlockData()} style={btnstyle}>
+                      genesisBlockData
+                    </button>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="card__text">테스트 코드 결과</div>
+      <br />
+      <div className="card__text">
+        <div id="writefield"></div>
+      </div>
     </div>
   );
 }

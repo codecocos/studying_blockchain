@@ -283,22 +283,22 @@ const updateUnspentTxOuts = (aTransactions, aUnspentTxOuts) => {
         //.reduce((a, b) => a와 배열과 b배열을 합쳐서 하나의 배열을 리턴함, []이 초기값에서 누적이 시작됨);
         .reduce((a, b) => a.concat(b), []);
 
-    console.log('/////////////////////////////newUnspentTxOuts');
-    console.log(newUnspentTxOuts);
+    // console.log('/////////////////////////////newUnspentTxOuts');
+    // console.log(newUnspentTxOuts);
 
     const consumedTxOuts = aTransactions
         .map((t) => t.txIns)
         .reduce((a, b) => a.concat(b), [])
         .map((txIn) => new UnspentTxOut(txIn.txOutId, txIn.txOutIndex, '', 0)); //어드래스: '', 양 : 0
-    console.log('/////////////////////////////consumedTxOuts');
-    console.log(consumedTxOuts);
+    // console.log('/////////////////////////////consumedTxOuts');
+    // console.log(consumedTxOuts);
 
 
     const resultingUnspentTxOuts = aUnspentTxOuts
         .filter(((uTxO) => !findUnspentTxOut(uTxO.txOutId, uTxO.txOutIndex, consumedTxOuts)))
         .concat(newUnspentTxOuts);
-    console.log('/////////////////////////////resultingUnspentTxOuts');
-    console.log(resultingUnspentTxOuts);
+    // console.log('/////////////////////////////resultingUnspentTxOuts');
+    // console.log(resultingUnspentTxOuts);
     return resultingUnspentTxOuts;
 };
 

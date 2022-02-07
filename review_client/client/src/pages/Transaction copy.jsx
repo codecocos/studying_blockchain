@@ -193,33 +193,6 @@ const Transaction = () => {
     marginTop: "20px",
   };
 
-  ///////////////////////////////////////////////////////
-  const [blockchain, SetBlockchain] = useState([]);
-  const reverseBlockchian = [...blockchain].reverse(); //배열 뒤집기
-
-  useEffect(() => {
-    getBlockchain();
-  }, []);
-
-  function getBlockchain() {
-    axios.post("/api/test/blocks").then((res) => {
-      const data = res.data;
-      console.log(data.blockchain);
-      SetBlockchain(data.blockchain);
-      console.log(blockchain);
-    });
-  }
-
-  const [shownBlock, setshownBlock] = useState({});
-
-  // 블록 상세정보 펼치기, 접기
-  const toggleBlockInfo = (block) => {
-    setshownBlock((shownBlockInfo) => ({
-      ...shownBlockInfo,
-      [block.id]: !shownBlockInfo[block.id],
-    }));
-  };
-
   return (
     <div>
       <h2 className="page-header">Transaction</h2>
@@ -347,46 +320,9 @@ const Transaction = () => {
                   {/* 블록 데이터 - 트랜잭션 */}
                   <div className="col-1"></div>
                   <div className="col-10">
-                    {/* {latestBlockData.map((item, index) =>
+                    {latestBlockData.map((item, index) =>
                       renderTx(item, index)
-                    )} */}
-                    {latestBlockData.map((tx) => {
-                      return (
-                        <div className="card" key={tx.id}>
-                          <div className="row">
-                            <div className="col-1-1">
-                              <div className="card__title__2">id</div>
-                            </div>
-                            <div
-                              className="col-10"
-                              onClick={() => {
-                                toggleBlockInfo(tx);
-                              }}
-                            >
-                              {tx.id}
-                            </div>
-                          </div>
-                          {shownBlock[tx.id] ? (
-                            <div key={tx.id}>
-                              <br />
-                              <div>
-                                <div className="card__title__2">txIns</div>
-                                {tx.txIns.map((item, index) =>
-                                  renderTxIns(item, index)
-                                )}
-                              </div>
-                              <div>
-                                <div className="card__title__2">txOuts</div>
-                                {tx.txOuts.map((item, index) =>
-                                  renderTxOuts(item, index)
-                                )}
-                              </div>
-                              <br />
-                            </div>
-                          ) : null}
-                        </div>
-                      );
-                    })}
+                    )}
                   </div>
                 </div>
               </div>
@@ -394,43 +330,7 @@ const Transaction = () => {
             {/* 트랜잭션 풀 */}
             <div className="card__title">Transaction Pool</div>
             <div className="card__text">
-              {transactionPool.map((tx) => {
-                return (
-                  <div className="card_1" key={tx.id}>
-                    <div className="row">
-                      <div className="col-1-1">
-                        <div className="card__title__2">id</div>
-                      </div>
-                      <div
-                        className="col-10"
-                        onClick={() => {
-                          toggleBlockInfo(tx);
-                        }}
-                      >
-                        {tx.id}
-                      </div>
-                    </div>
-                    {shownBlock[tx.id] ? (
-                      <div key={tx.id}>
-                        <br />
-                        <div>
-                          <div className="card__title__2">txIns</div>
-                          {tx.txIns.map((item, index) =>
-                            renderTxIns(item, index)
-                          )}
-                        </div>
-                        <div>
-                          <div className="card__title__2">txOuts</div>
-                          {tx.txOuts.map((item, index) =>
-                            renderTxOuts(item, index)
-                          )}
-                        </div>
-                        <br />
-                      </div>
-                    ) : null}
-                  </div>
-                );
-              })}
+              {transactionPool.map((item, index) => renderTxPool(item, index))}
             </div>
             {/* <div className="card__title">서버 응답 결과</div>
             <div id="writefield"></div> */}

@@ -25,7 +25,7 @@ const server = http.createServer(app).listen(port, () => {
 
   const p2pPort = parseInt(process.env.P2P_PORT) || 6001;
 
-  //p2pServer_func.initP2PServer(p2pPort);
+  p2pServer_func.initP2PServer(p2pPort);
 });
 
 server.on("error", onError);

@@ -29,7 +29,7 @@ const initP2PServer = (p2pPort) => {
     initConnection(ws);
   });
 
-  console.log(`\n  initP2PServer - S1. 웹소켓 서버 포트 : ${p2pPort} 번에 서버 공간 확보.`);
+  //console.log(`\n  initP2PServer - S1. 웹소켓 서버 포트 : ${p2pPort} 번에 서버 공간 확보.`);
 };
 
 const getSockets = () => sockets;

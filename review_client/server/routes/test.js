@@ -5,33 +5,33 @@ const _ = require('lodash');
 const transactionPool = require('../../transactionPool.json')
 
 const { generateNextBlock, generatenextBlockWithTransaction, getAccountBalance, getBlockchain, generateRawNextBlock,
-  getMyUnspentTransactionOutputs, getUnspentTxOuts, sendTransaction } = require('../public/blockchain')
+  getMyUnspentTransactionOutputs, getUnspentTxOuts, sendTransaction, getLatestBlock } = require('../public/blockchain')
 const { connectToPeers, getSockets, initP2PServer } = require('../public/p2pServer')
 const { initWallet, getPublicFromWallet } = require('../public/wallet')
 const { getTransactionPool } = require('../public/transactionPool')
 
-router.post('/qwe', (req, res) => {
-  const aa = _(transactionPool)
-    .map((tx) => (tx.id))
-    .value()
-  const bb = _(transactionPool)
-    .map((tx) => (tx.txIns))
-    .value()
-  const cc = _(transactionPool)
-    .map((tx) => (tx.txOuts))
-    .value()
-  console.log('123//////////////////////////////////////////////////////////////////////////////////////////////////');
-  console.log(transactionPool);
-  console.log('id');
-  console.log(transactionPool[0].id);
-  console.log('txIns');
-  console.log(transactionPool[0].txIns);
-  console.log('txOuts');
-  console.log(transactionPool[0].txOuts);
-  res.send(transactionPool)
-  //res.send({ aa, bb, cc })
+// router.post('/qwe', (req, res) => {
+//   const aa = _(transactionPool)
+//     .map((tx) => (tx.id))
+//     .value()
+//   const bb = _(transactionPool)
+//     .map((tx) => (tx.txIns))
+//     .value()
+//   const cc = _(transactionPool)
+//     .map((tx) => (tx.txOuts))
+//     .value()
+//   console.log('123//////////////////////////////////////////////////////////////////////////////////////////////////');
+//   console.log(transactionPool);
+//   console.log('id');
+//   console.log(transactionPool[0].id);
+//   console.log('txIns');
+//   console.log(transactionPool[0].txIns);
+//   console.log('txOuts');
+//   console.log(transactionPool[0].txOuts);
+//   res.send(transactionPool)
+//   //res.send({ aa, bb, cc })
 
-})
+// })
 
 router.post('/allBlocks', (req, res) => {
   const allBlocks = getBlockchain()
@@ -80,6 +80,11 @@ router.post('/blocks', (req, res) => {
   const blockchain = getBlockchain()
 
   res.send({ blockchain: blockchain });
+});
+router.post('/getLatestBlock', (req, res) => {
+  const latestBlock = getLatestBlock()
+
+  res.send({ latestBlock: latestBlock });
 });
 
 //바디데이터 입력없는 경우 : 코인베이스 트랜잭션
@@ -141,7 +146,7 @@ router.post('/socketOn', (req, res) => {
     const addPeer = `ws://localhost:${addP2pport}`;
     console.log(addPeerPort);
     initP2PServer(addP2pport);
-    //connectToPeers(addPeer);
+    connectToPeers(addPeer);
     res.send(`포트 ${addP2pport}번 에서 열림`);
   }
   // else {
