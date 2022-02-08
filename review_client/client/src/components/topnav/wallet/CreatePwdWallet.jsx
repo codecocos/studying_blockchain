@@ -13,10 +13,10 @@ import {
 import LockOutlined from "@mui/icons-material/LockOutlined";
 
 import axios from "axios";
-import { encryption } from "../../utils/encrypt";
-import { decryption } from "../../utils/decrypt";
+import { encryption } from "../../../utils/encrypt";
+import { decryption } from "../../../utils/decrypt";
 
-const Password = (props) => {
+const CreatePwdWallet = (props) => {
   const serverPort = parseInt(window.location.port) + 2000;
   const serverUrl = `http://127.0.0.1:${serverPort}`;
   const gridStyle = {
@@ -62,7 +62,7 @@ const Password = (props) => {
       }
     });
     props.setAnchorEl(null);
-    props.sethaveWallet("pass");
+    props.sethaveWallet("loginWallet");
     history.push("/");
   }
   return (
@@ -148,4 +148,4 @@ const Password = (props) => {
   );
 };
 
-export default Password;
+export default CreatePwdWallet;

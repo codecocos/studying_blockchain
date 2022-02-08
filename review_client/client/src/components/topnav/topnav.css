@@ -84,3 +84,17 @@
   display: flex;
   align-items: center;
 }
+
+/* 드랍다운...
+
+.dropdown__toggle {
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  position: relative;
+}
+
+.dropdown__toggle > i {
+  font-size: 2.5rem;
+  color: var(--txt-color);
+} */

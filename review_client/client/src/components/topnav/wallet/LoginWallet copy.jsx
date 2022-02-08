@@ -14,10 +14,10 @@ import LockOutlined from "@mui/icons-material/LockOutlined";
 
 import { useDispatch } from "react-redux";
 
-import { loginUser } from "../../redux/actions/UserAction";
+import { loginUser } from "../../../redux/actions/UserAction";
 import { useHistory } from "react-router";
 
-const Password = (props) => {
+const LoginWallet = (props) => {
   const gridStyle = {
     padding: 10,
   };
@@ -120,4 +120,4 @@ const Password = (props) => {
   );
 };
 
-export default Password;
+export default LoginWallet;

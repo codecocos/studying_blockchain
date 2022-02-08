@@ -4,7 +4,7 @@ import "./themeMenu.css";
 
 import { useDispatch } from "react-redux";
 
-import ThemeAction from "../../redux/actions/ThemeAction";
+import ThemeAction from "../../../redux/actions/ThemeAction";
 
 const mode_settings = [
   {

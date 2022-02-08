@@ -15,11 +15,11 @@ import LockOutlined from "@mui/icons-material/LockOutlined";
 // import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import axios from "axios";
 
-import { encryption } from "../../utils/encrypt";
+import { encryption } from "../../../utils/encrypt";
 // import { decryption } from "../../utils/decrypt";
 import { useHistory } from "react-router";
 
-const ForgotPwd = (props) => {
+const RestoreWallet = (props) => {
   const serverPort = parseInt(window.location.port) + 2000;
   const serverUrl = `http://127.0.0.1:${serverPort}`;
   const history = useHistory();
@@ -138,4 +138,4 @@ const ForgotPwd = (props) => {
   );
 };
 
-export default ForgotPwd;
+export default RestoreWallet;

@@ -15,6 +15,11 @@
     "icon": "bx bx-transfer-alt"
   },
   {
+    "display_name": "Wallet",
+    "route": "/wallet",
+    "icon": "bx bx-wallet"
+  },
+  {
     "display_name": "Testing board",
     "route": "/testing",
     "icon": "bx bx-cog"

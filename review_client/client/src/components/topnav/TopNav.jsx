@@ -5,7 +5,7 @@ import "./topnav.css";
 import { Link } from "react-router-dom";
 
 import UserMenu from "../userMenu/UserMenu";
-import ThemeMenu from "../themeMenu/ThemeMenu";
+import ThemeMenu from "../topnav/themeMenu/ThemeMenu";
 
 import user_image from "../../assets/images/tuat.png";
 
@@ -13,14 +13,18 @@ import user_menu from "../../assets/JsonData/user_menus.json";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import LoginWallet from "../wallet/LoginWallet";
-import RestoreWallet from "../wallet/RestoreWallet";
-import CreateWallet from "../wallet/CreateWallet";
-import CreatePwdWallet from "../wallet/CreatePwdWallet";
+import LoginWallet from "../topnav/wallet/LoginWallet";
+import RestoreWallet from "../topnav/wallet/RestoreWallet";
+import CreateWallet from "../topnav/wallet/CreateWallet";
+import CreatePwdWallet from "../topnav/wallet/CreatePwdWallet";
 
 import { Menu, MenuItem, Box } from "@mui/material";
 
 import { logoutUser } from "../../redux/actions/UserAction";
+
+import DropdownCp from "./dropdownCp/Dropdown";
+
+import notifications from "../../assets/JsonData/notification.json";
 
 const curr_user = {
   display_name: "Tuat Tran",
@@ -50,6 +54,7 @@ const Topnav = () => {
   const userAuth = userState.isAuth;
 
   const dispatch = useDispatch();
+
   const [haveWallet, sethaveWallet] = useState("LoginWallet");
   const [AnchorEl, setAnchorEl] = useState(null);
 
@@ -58,7 +63,6 @@ const Topnav = () => {
   };
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
     sethaveWallet("LoginWallet");
   };
 
@@ -71,7 +75,6 @@ const Topnav = () => {
           <LoginWallet
             haveWallet={haveWallet}
             sethaveWallet={sethaveWallet}
-            setAnchorEl={setAnchorEl}
           ></LoginWallet>
         );
       case "RestoreWallet":
@@ -79,7 +82,6 @@ const Topnav = () => {
           <RestoreWallet
             haveWallet={haveWallet}
             sethaveWallet={sethaveWallet}
-            setAnchorEl={setAnchorEl}
           ></RestoreWallet>
         );
       case "CreateWallet":
@@ -87,7 +89,6 @@ const Topnav = () => {
           <CreateWallet
             haveWallet={haveWallet}
             sethaveWallet={sethaveWallet}
-            setAnchorEl={setAnchorEl}
           ></CreateWallet>
         );
       case "CreatePwdWallet":
@@ -95,42 +96,65 @@ const Topnav = () => {
           <CreatePwdWallet
             haveWallet={haveWallet}
             sethaveWallet={sethaveWallet}
-            setAnchorEl={setAnchorEl}
           ></CreatePwdWallet>
         );
       default:
     }
   }
 
+  console.log(haveWallet);
+
   function loginWallet(isAuth) {
+    //로그인 되지 않은 상태 인 경우
     if (!isAuth) {
       return (
         <div>
-          <button className="dropdown__toggle" onClick={handleMenuOpen}>
+          {/* <button className="dropdown__toggle" onClick={handleMenuOpen}>
             <i className="bx bx-user-circle"></i>
-          </button>
-          {/* <div className="topnav__right-wallet"> */}
-          <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={AnchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(AnchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem>{returnMenu(haveWallet)}</MenuItem>
-          </Menu>
+          </button> */}
+          {/* <div className="topnav__right-item"> */}
+          <DropdownCp
+            icon="bx bx-user-circle"
+            //contentData={notifications}
+            //renderItems={(item, index) => renderNotificationItem(item, index)}
+            // renderFooter={() => <Link to="/">View All</Link>}
+            //onClick={haveWallet}
+            renderComponent={returnMenu(haveWallet)}
+          />
           {/* </div> */}
+          {/* 
+          <div
+            className="col-10"
+            onClick={() => {
+              getLoginToggle();
+            }}
+          >
+            로그인좀 해보자
+          </div> */}
+
+          {/* <div className="topnav__right-wallet">
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={AnchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(AnchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem>{returnMenu(haveWallet)}</MenuItem>
+            </Menu>
+          </div> */}
         </div>
       );
+      //로그인 된 상태인 경우
     } else {
       return (
         <div>
@@ -143,12 +167,21 @@ const Topnav = () => {
             >
               <i class="bx bx-user" style={usericon} />
             </Button> */}
-            <button
+
+            {/* <button
               className="dropdown__toggle"
               onClick={dispatch(logoutUser())}
             >
               <UserMenu />
-            </button>
+            </button> */}
+            <div className="topnav__right-item">
+              로그인 됨
+              {/* <Dropdown
+                customToggle={() => renderUserToggle(curr_user)}
+                contentData={user_menu}
+                renderItems={(item, index) => renderUserMenu(item, index)}
+              /> */}
+            </div>
           </div>
         </div>
       );
@@ -161,15 +194,16 @@ const Topnav = () => {
         <i className="bx bx-search"></i>
       </div>
       <div className="topnav__right">
+        {/* 드랍다운 컴포넌트 */}
         {/* <div className="topnav__right-item">
           <Dropdown
             customToggle={() => renderUserToggle(curr_user)}
             contentData={user_menu}
             renderItems={(item, index) => renderUserMenu(item, index)}
           />
-        </div>
+        </div> */}
 
-        <div className="topnav__right-item">
+        {/* <div className="topnav__right-item">
           <UserMenu />
         </div> */}
         <div className="topnav__right-item"> {loginWallet(userAuth)}</div>

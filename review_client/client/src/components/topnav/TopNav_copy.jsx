@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 
 import Dropdown from "../dropdown/Dropdown";
 
-import UserMenu from "../userMenu/UserMenu";
-import ThemeMenu from "../themeMenu/ThemeMenu";
+import UserMenu from "../../userMenu/UserMenu";
+import ThemeMenu from "../../themeMenu/ThemeMenu";
 
 import user_image from "../../assets/images/tuat.png";
 

@@ -11,10 +11,10 @@ import {
   TextField,
 } from "@material-ui/core";
 import KeyIcon from "@mui/icons-material/Key";
-import { encryption } from "../../utils/encrypt";
-import { decryption } from "../../utils/decrypt";
+import { encryption } from "../../../utils/encrypt";
+import { decryption } from "../../../utils/decrypt";
 
-const NewWallet = (props) => {
+const CreateWallet = (props) => {
   const serverPort = parseInt(window.location.port) + 2000;
   const serverUrl = `http://127.0.0.1:${serverPort}`;
   const gridStyle = {
@@ -123,7 +123,7 @@ const NewWallet = (props) => {
             if (Mnemonic === "") {
               alert("니모닉 문구를 생성해주세요");
             } else {
-              props.sethaveWallet("pwd");
+              props.sethaveWallet("CreatePwdWallet");
             }
           }}
         >
@@ -134,4 +134,4 @@ const NewWallet = (props) => {
   );
 };
 
-export default NewWallet;
+export default CreateWallet;
