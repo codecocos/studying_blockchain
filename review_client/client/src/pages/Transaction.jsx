@@ -13,6 +13,7 @@ const Transaction = () => {
   const [transactionPool, setTransactionPool] = useState([]);
   const [transaction, setTransaction] = useState([]);
   const [latestBlock, setLatestBlock] = useState([]);
+  const [showTx, setShowTx] = useState({});
 
   // const txIns = transaction.txins || [];
   // const txOuts = transaction.txOuts || [];
@@ -95,6 +96,14 @@ const Transaction = () => {
     );
     axios.post("/api/test/addPeer", { data: socketAddress }).then((res) => {});
   }
+
+  // 블록 상세정보 펼치기, 접기
+  const toggleTxInfo = (tx) => {
+    setShowTx((shownTxInfo) => ({
+      ...shownTxInfo,
+      [tx.id]: !shownTxInfo[tx.id],
+    }));
+  };
 
   const renderTxIns = (item, index) => (
     <div key={index}>
@@ -191,33 +200,6 @@ const Transaction = () => {
     fontSize: "5px",
     height: "60px",
     marginTop: "20px",
-  };
-
-  ///////////////////////////////////////////////////////
-  const [blockchain, SetBlockchain] = useState([]);
-  const reverseBlockchian = [...blockchain].reverse(); //배열 뒤집기
-
-  useEffect(() => {
-    getBlockchain();
-  }, []);
-
-  function getBlockchain() {
-    axios.post("/api/test/blocks").then((res) => {
-      const data = res.data;
-      console.log(data.blockchain);
-      SetBlockchain(data.blockchain);
-      console.log(blockchain);
-    });
-  }
-
-  const [shownBlock, setshownBlock] = useState({});
-
-  // 블록 상세정보 펼치기, 접기
-  const toggleBlockInfo = (block) => {
-    setshownBlock((shownBlockInfo) => ({
-      ...shownBlockInfo,
-      [block.id]: !shownBlockInfo[block.id],
-    }));
   };
 
   return (
@@ -360,15 +342,14 @@ const Transaction = () => {
                             <div
                               className="col-10"
                               onClick={() => {
-                                toggleBlockInfo(tx);
+                                toggleTxInfo(tx);
                               }}
                             >
                               {tx.id}
                             </div>
                           </div>
-                          {shownBlock[tx.id] ? (
+                          {showTx[tx.id] ? (
                             <div key={tx.id}>
-                              <br />
                               <div>
                                 <div className="card__title__2">txIns</div>
                                 {tx.txIns.map((item, index) =>
@@ -394,6 +375,7 @@ const Transaction = () => {
             {/* 트랜잭션 풀 */}
             <div className="card__title">Transaction Pool</div>
             <div className="card__text">
+              {/* {transactionPool.map((item, index) => renderTxPool(item, index))} */}
               {transactionPool.map((tx) => {
                 return (
                   <div className="card_1" key={tx.id}>
@@ -404,13 +386,13 @@ const Transaction = () => {
                       <div
                         className="col-10"
                         onClick={() => {
-                          toggleBlockInfo(tx);
+                          toggleTxInfo(tx);
                         }}
                       >
                         {tx.id}
                       </div>
                     </div>
-                    {shownBlock[tx.id] ? (
+                    {showTx[tx.id] ? (
                       <div key={tx.id}>
                         <br />
                         <div>
