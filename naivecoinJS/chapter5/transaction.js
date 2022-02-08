@@ -46,7 +46,6 @@ const getTransactionId = (transaction) => {
     const txInContent = transaction.txIns
         .map((txIn) => txIn.txOutId + txIn.txOutIndex)
         .reduce((a, b) => a + b, '');
-    console.log('', txInContent);
 
     const txOutContent = transaction.txOuts
         .map((txOut) => txOut.address + txOut.amount)
@@ -56,10 +55,6 @@ const getTransactionId = (transaction) => {
 };
 
 const validateTransaction = (transaction, aUnspentTxOuts) => {
-
-    if (!isValidTransactionStructure(transaction)) {
-        return false;
-    }
 
     // 유효한 트랜잭션 ID 인지 확인
     if (getTransactionId(transaction) !== transaction.id) {
@@ -95,7 +90,6 @@ const validateTransaction = (transaction, aUnspentTxOuts) => {
 const validateBlockTransactions = (aTransactions, aUnspentTxOuts, blockIndex) => {
     console.log('\n9.validateBlockTransactions 진입');
     const coinbaseTx = aTransactions[0];
-    console.log('\n222222222222', coinbaseTx);
 
     if (!validateCoinbaseTx(coinbaseTx, blockIndex)) {
         console.log('invalid coinbase transaction: ' + JSON.stringify(coinbaseTx));
@@ -135,7 +129,6 @@ const hasDuplicates = (txIns) => {
 
 //코인베이스 트랜잭션 유효성 검사
 const validateCoinbaseTx = (transaction, blockIndex) => {
-    console.log('333333333333', transaction);
     console.log('\n9-1. validateCoinbaseTx 진입');
     if (transaction == null) {
         console.log('the first transaction in the block must be coinbase transaction');
@@ -259,15 +252,17 @@ const updateUnspentTxOuts = (aTransactions, aUnspentTxOuts) => {
 };
 
 const processTransactions = (aTransactions, aUnspentTxOuts, blockIndex) => {
-    console.log('\n1111111111111111', aTransactions);
     console.log('\n5.프로세스트랜잭션 진입');
+    //ch5 에서 삭제
+    // if (!isValidTransactionsStructure(aTransactions)) {
+    //     return null;
+    // }
 
     if (!validateBlockTransactions(aTransactions, aUnspentTxOuts, blockIndex)) {
         console.log('invalid block transactions');
         return null;
     }
     return updateUnspentTxOuts(aTransactions, aUnspentTxOuts);
-    // updateUnspentTxOuts(aTransactions, aUnspentTxOuts) 의 최종 리턴값은 resultingUnspentTxOuts
 };
 
 const toHexString = (byteArray) => {
@@ -320,6 +315,13 @@ const isValidTxOutStructure = (txOut) => {
     }
 };
 
+//ch5 에서 삭제
+// const isValidTransactionsStructure = (transactions) => {
+//     console.log("\n6. isValidTransactionsStructure(복수) 진입");
+//     return transactions
+//         .map(isValidTransactionStructure)
+//         .reduce((a, b) => (a && b), true);
+// };
 
 //check all members of class
 const isValidTransactionStructure = (transaction) => {
@@ -357,7 +359,6 @@ const isValidTransactionStructure = (transaction) => {
 const isValidAddress = (address) => {
     console.log("\n7-3-1.isValidAddress 진입 \n or 2. 보낼 주소가 유효한 주소인지 확인");
     if (address.length !== 130) {
-        console.log(address);
         console.log('invalid public key length');
         return false;
     } else if (address.match('^[a-fA-F0-9]+$') === null) {
@@ -372,7 +373,7 @@ const isValidAddress = (address) => {
 };
 
 module.exports = {
-    processTransactions, signTxIn, getTransactionId, isValidAddress, validateTransaction,
-    UnspentTxOut, TxIn, TxOut, getCoinbaseTransaction, getPublicKey, hasDuplicates,
-    Transaction
+    processTransactions, signTxIn, getTransactionId, isValidAddress,
+    UnspentTxOut, TxIn, TxOut, getCoinbaseTransaction, getPublicKey,
+    Transaction, validateTransaction
 }

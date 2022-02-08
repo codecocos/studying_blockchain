@@ -1,11 +1,14 @@
 //chapter4 지갑
 
 const { ec } = require('elliptic');
-const { existsSync, readFileSync, writeFileSync, unlinkSync } = require('fs');
+const { existsSync, readFileSync, writeFileSync } = require('fs');
 const _ = require('lodash');
-const { getPublicKey, getTransactionId, signTxIn, Transaction, TxIn, TxOut } = require('./transaction');
+const { getPublicKey, getTransactionId, signTxIn, TxOut, TxIn, Transaction } = require('./transaction');
 
 const EC = new ec('secp256k1');
+//chapter4
+//const privateKeyLocation = 'node/wallet/private_key';
+//ch5
 const privateKeyLocation = process.env.PRIVATE_KEY || 'node/wallet/private_key';
 
 const getPrivateFromWallet = () => {
@@ -36,23 +39,28 @@ const initWallet = () => {
   console.log('new wallet with private key created to : %s', privateKeyLocation);
 };
 
+//ch5
 const deleteWallet = () => {
   if (existsSync(privateKeyLocation)) {
     unlinkSync(privateKeyLocation);
   }
-}
+};
+
 const getBalance = (address, unspentTxOuts) => {
   console.log('\n2.getBalance 진입');
+  //chapter4
+  // return _(unspentTxOuts)
+  //   .filter((uTxO) => uTxO.address === address)
+  //ch5
   return _(findUnspentTxOuts(address, unspentTxOuts))
     .map((uTxO) => uTxO.amount)
     .sum();
 };
 
+//ch5
 const findUnspentTxOuts = (ownerAddress, unspentTxOuts) => {
   return _.filter(unspentTxOuts, (uTxO) => uTxO.address === ownerAddress);
 };
-
-
 
 //소진되지 않은 트랜잭션 아웃(unspent transaction outputs)’ 목록을 순회하며 우리가 원하는 금액이 될 때까지 반복문 실행.
 const findTxOutsForAmount = (amount, myUnspentTxOuts) => {
@@ -67,11 +75,17 @@ const findTxOutsForAmount = (amount, myUnspentTxOuts) => {
       return { includedUnspentTxOuts, leftOverAmount };
     }
   }
+  //chapter4
+  //throw Error('not enough coins to send transaction');
 
+  //ch5
   const eMsg = 'Cannot create transaction from the available unspent transaction outputs.' +
     ' Required amount:' + amount + '. Available unspentTxOuts:' + JSON.stringify(myUnspentTxOuts);
   throw Error(eMsg);
+
 };
+
+
 
 const createTxOuts = (receiverAddress, myAddress, amount, leftOverAmount) => {
   //보낼 아웃풋
@@ -85,6 +99,7 @@ const createTxOuts = (receiverAddress, myAddress, amount, leftOverAmount) => {
   }
 };
 
+//ch5
 const filterTxPoolTxs = (unspentTxOuts, transactionPool) => {
   const txIns = _(transactionPool)
     .map((tx) => tx.txIns)
@@ -106,16 +121,20 @@ const filterTxPoolTxs = (unspentTxOuts, transactionPool) => {
   return _.without(unspentTxOuts, ...removable);
 };
 
-const createTransaction = (receiverAddress, amount,
-  privateKey, unspentTxOuts, txPool) => {
-  console.log('txPool: %s', JSON.stringify(txPool));
+//ch5 : txPool 추가됨
+const createTransaction = (receiverAddress, amount, privateKey, unspentTxOuts, txPool) => {
   console.log('\n createTransaction 진입 : 블록 생성시 바디데이터에 코인베이스크랜잭션과 함께 담긴다.');
+  console.log('txPool: %s', JSON.stringify(txPool));
   const myAddress = getPublicKey(privateKey);
-  const myUnspentTxOutsA = unspentTxOuts.filter((uTxO) => uTxO.address === myAddress);
+  //chapter4
+  //const myUnspentTxOuts = unspentTxOuts.filter((uTxO) => uTxO.address === myAddress);
 
+  //ch5
+  const myUnspentTxOutsA = unspentTxOuts.filter((uTxO) => uTxO.address === myAddress);
   const myUnspentTxOuts = filterTxPoolTxs(myUnspentTxOutsA, txPool);
 
   // filter from unspentOutputs such inputs that are referenced in pool
+
   const { includedUnspentTxOuts, leftOverAmount } = findTxOutsForAmount(amount, myUnspentTxOuts);
 
   //소진되지 않은 트랜잭션 아웃풋을 가진 만큼 트랜책션 txIns를 만들어낼 수 있다.

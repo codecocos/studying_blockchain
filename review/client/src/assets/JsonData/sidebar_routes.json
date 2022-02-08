@@ -1,0 +1,12 @@
+[
+  {
+    "display_name": "Dash board",
+    "route": "/",
+    "icon": "bx bx-bar-chart-alt"
+  },
+  {
+    "display_name": "Testing board",
+    "route": "/testing",
+    "icon": "bx bx-bar-chart-alt"
+  }
+]

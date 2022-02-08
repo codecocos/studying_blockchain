@@ -2,13 +2,13 @@ const WebSocket = require('ws')
 const { addBlockToChain, getLatestBlock, isValidBlockStructure, replaceChain, getBlockchain, handleReceivedTransaction } = require('./blockchain');
 const { getTransactionPool } = require('./transactionPool');
 
-
 const sockets = [];
 
 const MessageType = {
     QUERY_LATEST: 0,
     QUERY_ALL: 1,
     RESPONSE_BLOCKCHAIN: 2,
+    //ch5
     QUERY_TRANSACTION_POOL: 3,
     RESPONSE_TRANSACTION_POOL: 4
 }
@@ -32,6 +32,7 @@ const initConnection = (ws) => {
     initErrorHandler(ws);
     write(ws, queryChainLengthMsg());
 
+    //ch5
     // query transactions pool only some time after chain query
     setTimeout(() => {
         broadcast(queryTransactionPoolMsg());
@@ -49,17 +50,22 @@ const JSONToObject = (data) => {
 
 const initMessageHandler = (ws) => {
     console.log('5. 메세지 핸들러 진입\n');
+    //ch5
+
+    //chapter4
     ws.on('message', (data) => {
         console.log('\n6. 메시지 핸들러 속 메세지 확인\n');
-        //버퍼로 받은 데이터 제이슨 형식으로 파서
-        const message = JSONToObject(data);
-
-        if (message === null) {
-            console.log('could not parse received JSON message: ' + data);
-            return;
-        }
-        console.log('Received message: %s', JSON.stringify(message));
+        //ch5
         try {
+            //버퍼로 받은 데이터 제이슨 형식으로 파서
+            const message = JSONToObject(data);
+
+            if (message === null) {
+                console.log('could not parse received JSON message: ' + data);
+                return;
+            }
+            console.log('Received message: %s', JSON.stringify(message));
+
             switch (message.type) {
                 case MessageType.QUERY_LATEST:
                     console.log("\n7. 메세지타입 : QUERY_LATEST");
@@ -78,6 +84,8 @@ const initMessageHandler = (ws) => {
                     }
                     handleBlockchainResponse(receivedBlocks);
                     break;
+
+                //ch5
                 case MessageType.QUERY_TRANSACTION_POOL:
                     write(ws, responseTransactionPoolMsg());
                     break;
@@ -99,6 +107,7 @@ const initMessageHandler = (ws) => {
                     });
                     break;
             }
+            //ch5
         } catch (e) {
             console.log(e);
         }
@@ -125,6 +134,9 @@ const responseLatestMsg = () => ({
     'data': JSON.stringify([getLatestBlock()])
 });
 
+
+
+//ch5
 const queryTransactionPoolMsg = () => ({
     'type': MessageType.QUERY_TRANSACTION_POOL,
     'data': null
@@ -134,6 +146,9 @@ const responseTransactionPoolMsg = () => ({
     'type': MessageType.RESPONSE_TRANSACTION_POOL,
     'data': JSON.stringify(getTransactionPool())
 });
+
+
+
 
 const initErrorHandler = (ws) => {
     const closeConnection = (myWs) => {
@@ -194,8 +209,9 @@ const connectToPeers = (newPeer) => {
     });
 };
 
+//ch5
 const broadCastTransactionPool = () => {
     broadcast(responseTransactionPoolMsg());
 };
 
-module.exports = { connectToPeers, broadcastLatest, broadCastTransactionPool, initP2PServer, getSockets };
+module.exports = { connectToPeers, broadcastLatest, initP2PServer, getSockets, broadCastTransactionPool };

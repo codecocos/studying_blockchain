@@ -253,9 +253,10 @@ const updateUnspentTxOuts = (aTransactions, aUnspentTxOuts) => {
 
 const processTransactions = (aTransactions, aUnspentTxOuts, blockIndex) => {
     console.log('\n5.프로세스트랜잭션 진입');
-    if (!isValidTransactionsStructure(aTransactions)) {
-        return null;
-    }
+    //ch5 에서 삭제
+    // if (!isValidTransactionsStructure(aTransactions)) {
+    //     return null;
+    // }
 
     if (!validateBlockTransactions(aTransactions, aUnspentTxOuts, blockIndex)) {
         console.log('invalid block transactions');
@@ -314,12 +315,13 @@ const isValidTxOutStructure = (txOut) => {
     }
 };
 
-const isValidTransactionsStructure = (transactions) => {
-    console.log("\n6. isValidTransactionsStructure(복수) 진입");
-    return transactions
-        .map(isValidTransactionStructure)
-        .reduce((a, b) => (a && b), true);
-};
+//ch5 에서 삭제
+// const isValidTransactionsStructure = (transactions) => {
+//     console.log("\n6. isValidTransactionsStructure(복수) 진입");
+//     return transactions
+//         .map(isValidTransactionStructure)
+//         .reduce((a, b) => (a && b), true);
+// };
 
 //check all members of class
 const isValidTransactionStructure = (transaction) => {

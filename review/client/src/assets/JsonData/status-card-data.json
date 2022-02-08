@@ -1,0 +1,12 @@
+[
+  {
+    "icon": "bx bx-dollar-circle",
+    "count": "$2,632",
+    "title": "총 누적 채굴량"
+  },
+  {
+    "icon": "bx bx-receipt",
+    "count": "460445.5 USD(50BTC)",
+    "title": "가장 최신블럭"
+  }
+]

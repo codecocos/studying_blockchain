@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser')
 const express = require('express')
+const _ = require('lodash')
 
 const { generateNextBlock, generatenextBlockWithTransaction, getAccountBalance, getBlockchain, generateRawNextBlock, getMyUnspentTransactionOutputs, getUnspentTxOuts, sendTransaction } = require('./blockchain')
 const { connectToPeers, getSockets, initP2PServer } = require('./p2p')
@@ -118,6 +119,27 @@ const initHttpServer = (myHttpPort) => {
         res.send({ 'msg': 'stopping server' });
         process.exit();
     });
+
+    //ch6
+    app.get('/block/:hash', (req, res) => {
+        const block = _.find(getBlockchain(), { 'hash': req.params.hash });
+        res.send(block);
+    });
+
+    app.get('/transaction/:id', (req, res) => {
+        const tx = _(getBlockchain())
+            .map((blocks) => blocks.data)
+            .flatten()
+            .find({ 'id': req.params.id });
+        res.send(tx);
+    });
+
+    app.get('/address/:address', (req, res) => {
+        const unspentTxOuts =
+            _.filter(getUnspentTxOuts(), (uTxO) => uTxO.address === req.params.address)
+        res.send({ 'unspentTxOuts': unspentTxOuts });
+    });
+
 
     app.listen(myHttpPort, () => {
         console.log('Listening http on port: ' + myHttpPort);

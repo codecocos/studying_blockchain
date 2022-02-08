@@ -66,7 +66,7 @@ const Topnav = () => {
     sethaveWallet("LoginWallet");
   };
 
-  useEffect(() => {}, [haveWallet]);
+  //useEffect(() => {}, [haveWallet]);
 
   function returnMenu(haveWallet) {
     switch (haveWallet) {
@@ -102,7 +102,7 @@ const Topnav = () => {
     }
   }
 
-  console.log(haveWallet);
+  //console.log(haveWallet);
 
   function loginWallet(isAuth) {
     //로그인 되지 않은 상태 인 경우

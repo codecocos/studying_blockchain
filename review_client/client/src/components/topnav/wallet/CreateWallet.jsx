@@ -15,8 +15,6 @@ import { encryption } from "../../../utils/encrypt";
 import { decryption } from "../../../utils/decrypt";
 
 const CreateWallet = (props) => {
-  const serverPort = parseInt(window.location.port) + 2000;
-  const serverUrl = `http://127.0.0.1:${serverPort}`;
   const gridStyle = {
     padding: 10,
   };
@@ -44,7 +42,7 @@ const CreateWallet = (props) => {
   };
 
   const getMnemonic = () => {
-    axios.post(`${serverUrl}/wallet/mnemonic`).then((res) => {
+    axios.post(`/api/wallet/mnemonic`).then((res) => {
       const rawMnemonic = res.data.mnemonic;
       const encMnemonic = encryption(rawMnemonic);
       const decMnemonic = decryption(encMnemonic);

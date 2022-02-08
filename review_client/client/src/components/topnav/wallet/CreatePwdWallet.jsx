@@ -17,8 +17,6 @@ import { encryption } from "../../../utils/encrypt";
 import { decryption } from "../../../utils/decrypt";
 
 const CreatePwdWallet = (props) => {
-  const serverPort = parseInt(window.location.port) + 2000;
-  const serverUrl = `http://127.0.0.1:${serverPort}`;
   const gridStyle = {
     padding: 10,
   };
@@ -47,13 +45,13 @@ const CreatePwdWallet = (props) => {
     setMnemonic(decMnemonic);
   };
 
-  function newWallet(props) {
+  function createWallet(props) {
     const variables = {
       password: Password,
       mnemonic: Mnemonic,
     };
 
-    axios.post(`${serverUrl}/wallet/newWallet`, variables).then((res) => {
+    axios.post("/api/wallet/createWallet", variables).then((res) => {
       if (res.data.registerSuccess) {
         localStorage.setItem("loglevel", res.data.encryptkey);
         alert(res.data.message);
@@ -61,8 +59,10 @@ const CreatePwdWallet = (props) => {
         alert(res.data.message);
       }
     });
-    props.setAnchorEl(null);
+    console.log(props);
     props.sethaveWallet("loginWallet");
+    console.log(props);
+
     history.push("/");
   }
   return (
@@ -138,7 +138,7 @@ const CreatePwdWallet = (props) => {
           style={btnstyle}
           variant="contained"
           fullWidth
-          onClick={() => newWallet(props)}
+          onClick={() => createWallet(props)}
         >
           Save
         </Button>

@@ -1,23 +1,25 @@
 //chapter3 : 트랜잭션 추가
 
 const CryptoJS = require('crypto-js')
-const _ = require('lodash');
+const _ = require('lodash')
 const { hexToBinary } = require('./util')
-const { processTransactions } = require("./transaction");
+const { processTransactions } = require('./transaction')
+const { addToTransactionPool, getTransactionPool, updateTransactionPool } = require('./transactionPool');
+
 
 class Block {
     constructor(index, hash, previousHash, timestamp, data, difficulty, nonce) {
         this.index = index;
+        this.hash = hash;
         this.previousHash = previousHash;
         this.timestamp = timestamp;
         this.data = data;
-        this.hash = hash;
         this.difficulty = difficulty;
         this.nonce = nonce;
     }
 }
 
-//chapter5
+//ch5
 const genesisTransaction = {
     'txIns': [{ 'signature': '', 'txOutId': '', 'txOutIndex': 0 }],
     'txOuts': [{
@@ -29,9 +31,11 @@ const genesisTransaction = {
 
 const genesisBlock = new Block(
     0,
+    //ch5
     '91a73664bc84c0baa1fc75ea6e4aa6d1d20c5df664c724e3159aefc2e1186627',
     '',
     1465154705,
+    //ch5
     [genesisTransaction],
     0,
     0
@@ -39,20 +43,22 @@ const genesisBlock = new Block(
 
 let blockchain = [genesisBlock];
 
-// the unspent txOut of genesis block is set to unspentTxOuts on startup //chapter 5 에서 수정
-let unspentTxOuts = processTransactions(blockchain[0].data, [], 0)
-console.log("sassdas", blockchain[0].data);
-//let unspentTxOuts = [];
+//ch5
+// the unspent txOut of genesis block is set to unspentTxOuts on startup
+let unspentTxOuts = processTransactions(blockchain[0].data, [], 0);
+
 
 const getBlockchain = () => blockchain;
 
+//ch5
 const getUnspentTxOuts = () => _.cloneDeep(unspentTxOuts);
 
+//ch5 
 // and txPool should be only updated at the same time
 const setUnspentTxOuts = (newUnspentTxOut) => {
-    console.log('replacing unspentTxouts with %s', newUnspentTxOut);
+    console.log('replacing unspentTxouts with: %s', newUnspentTxOut);
     unspentTxOuts = newUnspentTxOut;
-}
+};
 
 const getLatestBlock = () => blockchain[blockchain.length - 1];
 
@@ -116,31 +122,29 @@ const generateRawNextBlock = (blockData) => {
     }
 };
 
+//ch5
 // gets the unspent transaction outputs owned by the wallet
 const getMyUnspentTransactionOutputs = () => {
-    const { findUnspentTxOuts } = require('./wallet')
+    const { getPublicFromWallet, findUnspentTxOuts } = require('./wallet');
     return findUnspentTxOuts(getPublicFromWallet(), getUnspentTxOuts());
 };
 
 //chapter4 추가
 const generateNextBlock = () => {
-    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
     console.log('\n1. 마인블럭시 generateNextBlock 진입');
-    const { getTransactionPool } = require('./transactionPool');
     const { getCoinbaseTransaction } = require('./transaction')
     const { getPublicFromWallet } = require('./wallet');
     const coinbaseTx = getCoinbaseTransaction(getPublicFromWallet(), getLatestBlock().index + 1);
     //chapter4
-    // const blockData = [coinbaseTx];
+    //const blockData = [coinbaseTx];
 
-    //chapter5
-    const blockData = [coinbaseTx].concat(getTransactionPool())
+    //ch5
+    const blockData = [coinbaseTx].concat(getTransactionPool());
 
     return generateRawNextBlock(blockData);
 };
 
 const generatenextBlockWithTransaction = (receiverAddress, amount) => {
-    const { getTransactionPool } = require('./transactionPool');
     console.log('\n1. generatenextBlockWithTransaction 진입');
     const { getCoinbaseTransaction, isValidAddress } = require('./transaction')
     const { createTransaction, getPrivateFromWallet, getPublicFromWallet } = require('./wallet');
@@ -152,10 +156,10 @@ const generatenextBlockWithTransaction = (receiverAddress, amount) => {
         throw Error('invalid amount');
     }
     const coinbaseTx = getCoinbaseTransaction(getPublicFromWallet(), getLatestBlock().index + 1);
-
     //chapter4
-    // const tx = createTransaction(receiverAddress, amount, getPrivateFromWallet(), unspentTxOuts);
-    //chapter5
+    //const tx = createTransaction(receiverAddress, amount, getPrivateFromWallet(), unspentTxOuts);
+
+    //ch5
     const tx = createTransaction(receiverAddress, amount, getPrivateFromWallet(), getUnspentTxOuts(), getTransactionPool());
 
     const blockData = [coinbaseTx, tx];
@@ -179,18 +183,22 @@ const findBlock = (index, previousHash, timestamp, data, difficulty) => {
 const getAccountBalance = () => {
     console.log("\n1.잔고 계산 시작");
     const { getBalance, getPublicFromWallet } = require('./wallet');
+    //chapter4
+    //return getBalance(getPublicFromWallet(), unspentTxOuts);
+    //ch5
     return getBalance(getPublicFromWallet(), getUnspentTxOuts());
 };
 
-//chapter5
+//ch5
 const sendTransaction = (address, amount) => {
-    const { addToTransactionPool, getTransactionPool, } = require('./transactionPool');
+    const { createTransaction, getPrivateFromWallet } = require('./wallet');
     const { broadCastTransactionPool } = require('./p2p')
     const tx = createTransaction(address, amount, getPrivateFromWallet(), getUnspentTxOuts(), getTransactionPool());
     addToTransactionPool(tx, getUnspentTxOuts());
     broadCastTransactionPool();
     return tx;
 };
+
 
 const calculateHashForBlock = (block) =>
     calculateHash(block.index, block.previousHash, block.timestamp, block.data, block.difficulty, block.nonce);
@@ -282,10 +290,30 @@ const hashMatchesDifficulty = (hash, difficulty) => {
     return hashInBinary.startsWith(requiredPrefix);
 };
 
+//chapter4
+// const isValidChain = (blockchainToValidate) => {
+//     console.log('isValidChain:');
+//     console.log(JSON.stringify(blockchainToValidate));
+//     const isValidGenesis = (block) => {
+//         return JSON.stringify(block) === JSON.stringify(genesisBlock);
+//     };
+
+//     if (!isValidGenesis(blockchainToValidate[0])) {
+//         return false;
+//     }
+
+//     for (let i = 1; i < blockchainToValidate.length; i++) {
+//         if (!isValidNewBlock(blockchainToValidate[i], blockchainToValidate[i - 1])) {
+//             return false;
+//         }
+//     }
+//     return true;
+// };
+
 /*
     Checks if the given blockchain is valid. Return the unspent txOuts if the chain is valid
  */
-
+//ch5
 const isValidChain = (blockchainToValidate) => {
     console.log('isValidChain:');
     console.log(JSON.stringify(blockchainToValidate));
@@ -297,20 +325,11 @@ const isValidChain = (blockchainToValidate) => {
         return null;
     }
     /*
-  Validate each block in the chain. The block is valid if the block structure is valid
-    and the transaction are valid
-   */
+    Validate each block in the chain. The block is valid if the block structure is valid
+      and the transaction are valid
+     */
     let aUnspentTxOuts = [];
 
-    //chapter4
-    // for (let i = 0; i < blockchainToValidate.length; i++) {
-    //     if (!isValidNewBlock(blockchainToValidate[i], blockchainToValidate[i - 1])) {
-    //         return false;
-    //     }
-    // }
-    // return true;
-
-    //chapter5
     for (let i = 0; i < blockchainToValidate.length; i++) {
         const currentBlock = blockchainToValidate[i];
         if (i !== 0 && !isValidNewBlock(blockchainToValidate[i], blockchainToValidate[i - 1])) {
@@ -326,24 +345,28 @@ const isValidChain = (blockchainToValidate) => {
     return aUnspentTxOuts;
 };
 
+
+
+
 const addBlockToChain = (newBlock) => {
     console.log('\n3. 애드블럭투체인 진입\n', newBlock);
     const { processTransactions } = require("./transaction");
-    const { updateTransactionPool } = require('./transactionPool');
     if (isValidNewBlock(newBlock, getLatestBlock())) {
+        //chapter4
+        //const retVal = processTransactions(newBlock.data, unspentTxOuts, newBlock.index);
+        //ch5
         const retVal = processTransactions(newBlock.data, getUnspentTxOuts(), newBlock.index);
+
         if (retVal === null) {
             console.log('\n블럭 생성 실패');
             console.log('block is not valid in terms of transactions');
             return false;
         } else {
             console.log("\n블럭이 성공적으로 생성됩니다.");
-
+            blockchain.push(newBlock);
             //chapter4
-            // blockchain.push(newBlock);
-            // unspentTxOuts = retVal;
-
-            //chapter5
+            //unspentTxOuts = retVal;
+            //ch5
             setUnspentTxOuts(retVal);
             updateTransactionPool(unspentTxOuts);
             return true;
@@ -354,31 +377,34 @@ const addBlockToChain = (newBlock) => {
 
 const replaceChain = (newBlocks) => {
     const { broadcastLatest } = require('./p2p')
-    const { updateTransactionPool } = require('./transactionPool');
+
+    //if (isValidChain(newBlocks) && newBlocks.length > getBlockchain().length) {
+    //chapter4
+    //if (isValidChain(newBlocks) &&
+    //ch5
     const aUnspentTxOuts = isValidChain(newBlocks);
     const validChain = aUnspentTxOuts !== null;
-    //if (isValidChain(newBlocks) && newBlocks.length > getBlockchain().length) {
-    //if (isValidChain(newBlocks) &&
     if (validChain &&
         getAccumulatedDifficulty(newBlocks) > getAccumulatedDifficulty(getBlockchain())) {
         console.log('Received blockchain is valid. Replacing current blockchain with received blockchain');
         blockchain = newBlocks;
-        //chapter4
-        //blockchain = newBlocks;
-        //chapter5
+
+        //ch5
         setUnspentTxOuts(aUnspentTxOuts);
         updateTransactionPool(unspentTxOuts);
+
+
         broadcastLatest();
     } else {
         console.log('Received blockchain invalid');
     }
 };
 
-//chapter5
+//ch5
 const handleReceivedTransaction = (transaction) => {
-    const { addToTransactionPool } = require('./transactionPool');
     addToTransactionPool(transaction, getUnspentTxOuts());
 };
+
 
 module.exports = {
     Block, getBlockchain, getUnspentTxOuts, getLatestBlock, sendTransaction,
