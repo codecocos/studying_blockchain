@@ -89,7 +89,7 @@ router.post('/getLatestBlock', (req, res) => {
 
 //바디데이터 입력없는 경우 : 코인베이스 트랜잭션
 router.post('/mineBlock', (req, res) => {
-  console.log('블록생성을 시작합니다~~~~~~~~~');
+  //console.log('블록생성을 시작합니다~~~~~~~~~');
 
   const newBlock = generateNextBlock();
 
@@ -175,7 +175,7 @@ router.post('/addPeer', (req, res) => {
 });
 
 router.post('/balance', (req, res) => {
-  console.log('잔고를 보여줍니다~~~~~~');
+  // console.log('잔고를 보여줍니다~~~~~~');
   const balance = getAccountBalance()
   res.send({ balance: balance })
 })
@@ -231,12 +231,14 @@ router.post('/stop', (req, res) => {
   process.exit();
 });
 
+// 해쉬값으로 해당 블록 불러오기
 router.post('/block/:hash', (req, res) => {
   console.log("해쉬값확인", req.params.hash)
   const block = _.find(getBlockchain(), { 'hash': req.params.hash });
   res.send(block);
 });
 
+// 트랜잭션 아이디로 해당 트랜잭션 불러오기
 router.post('/transaction/:id', (req, res) => {
   const tx = _(getBlockchain())
     .map((blocks) => blocks.data)
@@ -245,6 +247,7 @@ router.post('/transaction/:id', (req, res) => {
   res.send(tx);
 });
 
+// 어드레스로 해당 어드래스가 들어 있는 UTxO 모두 가져오기
 router.post('/address/:address', (req, res) => {
   const unspentTxOuts =
     _.filter(getUnspentTxOuts(), (uTxO) => uTxO.address === req.params.address)

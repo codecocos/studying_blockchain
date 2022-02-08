@@ -117,7 +117,7 @@ const generateRawNextBlock = (blockData) => {
 
   //전체 블록체인을 인자로 하여 difficulty를 가져온다.
   const difficulty = getDifficulty(getBlockchain()) //chapter2 추가
-  console.log("현재 difficulty 값 : ", difficulty);
+  //console.log("현재 difficulty 값 : ", difficulty);
 
   //다음 블록의 인덱스 는 이전블록의 인덱스에 +1 한다.
   const nextIndex = previousBlock.index + 1;
@@ -182,7 +182,7 @@ const hashMatchesDifficulty = (hash, difficulty) => {
 
 //chapter4 추가
 const generateNextBlock = () => {
-  console.log('\n1. 마인블럭시 generateNextBlock 진입');
+  //console.log('\n1. 마인블럭시 generateNextBlock 진입');
 
   const { getCoinbaseTransaction } = require('./transaction')
   const { getPublicFromWallet } = require('./wallet');
@@ -192,7 +192,7 @@ const generateNextBlock = () => {
   // 코인베이스 트랜잭션을 담은 배열과 , 트랜잭션 풀 배열을 합친 배열을 블록데이터에 담는다.
   const blockData = [coinbaseTx].concat(getTransactionPool());
 
-  console.log("generateNextBlock::blockData :", blockData);
+  //console.log("generateNextBlock::blockData :", blockData);
 
   return generateRawNextBlock(blockData);
 };
@@ -216,8 +216,8 @@ const generatenextBlockWithTransaction = (receiverAddress, amount) => {
 
 //chapter4 추가
 const getAccountBalance = () => {
-  console.log("\n1.잔고 계산 시작");
-  console.log("\nUTxO\n", unspentTxOuts);
+  // console.log("\n1.잔고 계산 시작");
+  // console.log("\nUTxO\n", unspentTxOuts);
   const { getBalance, getPublicFromWallet } = require('./wallet');
   return getBalance(getPublicFromWallet(), getUnspentTxOuts());
 };
@@ -277,7 +277,7 @@ const isValidNewBlock = (newBlock, previousBlock) => {
   else if (!hasValidHash(newBlock)) {
     return false
   }
-  console.log("\n4.애드블럭체인시 유효성 검사 진입 후 통과");
+  //console.log("\n4.애드블럭체인시 유효성 검사 진입 후 통과");
   return true;
 };
 
@@ -347,7 +347,7 @@ Validate each block in the chain. The block is valid if the block structure is v
 };
 
 const addBlockToChain = (newBlock) => {
-  console.log('\n3. 애드블럭투체인 진입\n', newBlock);
+  //console.log('\n3. 애드블럭투체인 진입\n', newBlock);
   const { processTransactions } = require("./transaction");
 
   if (isValidNewBlock(newBlock, getLatestBlock())) {

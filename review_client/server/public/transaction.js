@@ -100,7 +100,7 @@ const validateTransaction = (transaction, aUnspentTxOuts) => {
 };
 
 const validateBlockTransactions = (aTransactions, aUnspentTxOuts, blockIndex) => {
-    console.log('\n9.validateBlockTransactions 진입');
+    //console.log('\n9.validateBlockTransactions 진입');
     const coinbaseTx = aTransactions[0];
 
     if (!validateCoinbaseTx(coinbaseTx, blockIndex)) {
@@ -153,7 +153,7 @@ const hasDuplicates = (txIns) => {
 
 //코인베이스 트랜잭션 유효성 검사
 const validateCoinbaseTx = (transaction, blockIndex) => {
-    console.log('\n9-1. validateCoinbaseTx 진입');
+    //console.log('\n9-1. validateCoinbaseTx 진입');
     if (transaction == null) {
         console.log('the first transaction in the block must be coinbase transaction');
         return false;
@@ -178,7 +178,7 @@ const validateCoinbaseTx = (transaction, blockIndex) => {
         console.log('invalid coinbase amount in coinbase transaction');
         return false;
     }
-    console.log('\n9-2. validateCoinbaseTx 통과');
+    //console.log('\n9-2. validateCoinbaseTx 통과');
     return true;
 };
 
@@ -223,13 +223,13 @@ const getTxInAmount = (txIn, aUnspentTxOuts) => {
 };
 
 const findUnspentTxOut = (transactionId, index, aUnspentTxOuts) => {
-    console.log('\n?.findUnspentTxOut 진입');
+    //console.log('\n?.findUnspentTxOut 진입');
     return aUnspentTxOuts.find((uTxO) => uTxO.txOutId === transactionId && uTxO.txOutIndex === index);
 };
 
 //코인베이스 트랜잭션 : 노드의 첫 트랜잭션
 const getCoinbaseTransaction = (address, blockIndex) => {
-    console.log("\n2. 코인베이스 트랜잭션 진입");
+    //console.log("\n2. 코인베이스 트랜잭션 진입");
 
     const t = new Transaction();
     const txIn = new TxIn();
@@ -270,9 +270,9 @@ const signTxIn = (transaction, txInIndex,
 
 //aTransactions 을 aUnspentTxOuts 에 추가 한다
 const updateUnspentTxOuts = (aTransactions, aUnspentTxOuts) => {
-    console.log('\n5.프로세스트랜잭션 통과후 updateUnspentTxOuts 진입');
-    console.log('잭션', aTransactions);
-    console.log('aUnspentTxOuts', aUnspentTxOuts);
+    // console.log('\n5.프로세스트랜잭션 통과후 updateUnspentTxOuts 진입');
+    // console.log('잭션', aTransactions);
+    // console.log('aUnspentTxOuts', aUnspentTxOuts);
     const newUnspentTxOuts = aTransactions
         .map((t) => {
             //return 트랜잭션 클래스의 트랜잭션 아웃풋스            (txOutId, txOutIndex, address, amount)
@@ -303,7 +303,7 @@ const updateUnspentTxOuts = (aTransactions, aUnspentTxOuts) => {
 };
 
 const processTransactions = (aTransactions, aUnspentTxOuts, blockIndex) => {
-    console.log('\n5.프로세스트랜잭션 진입');
+    //console.log('\n5.프로세스트랜잭션 진입');
     //ch5에서 삭제
     // if (!isValidTransactionsStructure(aTransactions)) {
     //     return null;

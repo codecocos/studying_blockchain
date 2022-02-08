@@ -68,9 +68,9 @@ const deleteWallet = () => {
 };
 
 const getBalance = (address, unspentTxOuts) => {
-  console.log('\n2.getBalance 진입');
-  console.log("\nUTxO\n", unspentTxOuts);
-  console.log('\n잔액조회할 주소: \n', address);
+  // console.log('\n2.getBalance 진입');
+  // console.log("\nUTxO\n", unspentTxOuts);
+  // console.log('\n잔액조회할 주소: \n', address);
 
   // filter : 특정 조건을 만족하는 모든 요소를 추출하는 메소드
   // 입력한 key값이 true인 객체들을 배열로 반환
