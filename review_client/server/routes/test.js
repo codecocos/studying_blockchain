@@ -161,7 +161,17 @@ router.post('/socketOn', (req, res) => {
 });
 
 router.post('/peers', (req, res) => {
-  res.send(getSockets().map((s) => s._socket.remoteAddress + ':' + s._socket.remotePort));
+  console.log('////////////////////////////////////////////////');
+  console.log(getSockets())
+  console.log('////////////////////////////////////////////////');
+  console.log(getSockets().map((s) => s._socket.remoteAddress))
+  console.log(getSockets().map((s) => s._socket.remotePort))
+  console.log(getSockets().map((s) => s._socket.connecting))
+  // console.log(getSockets().map((s) => s._socket._peername.address))
+  // console.log(getSockets().map((s) => s._socket._peername.family))
+  // console.log(getSockets().map((s) => s._socket._peername.port))
+  const peers = getSockets().map((s) => s._socket.remoteAddress + ':' + s._socket.remotePort)
+  res.send({ peers: peers });
 });
 
 router.post('/addPeer', (req, res) => {
