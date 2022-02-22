@@ -17,6 +17,7 @@ const clickOutsideRef = (content_ref, toggle_ref) => {
 };
 
 const DropdownCp = (props) => {
+  console.log(props);
   const dropdown_toggle_el = useRef(null);
   const dropdown_content_el = useRef(null);
 

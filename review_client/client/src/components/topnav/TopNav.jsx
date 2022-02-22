@@ -63,38 +63,37 @@ const Topnav = () => {
   };
 
   const handleMenuClose = () => {
+    //setAnchorEl(null);
     sethaveWallet("LoginWallet");
   };
-
-  //useEffect(() => {}, [haveWallet]);
 
   function returnMenu(haveWallet) {
     switch (haveWallet) {
       case "LoginWallet":
         return (
           <LoginWallet
-            haveWallet={haveWallet}
+            // haveWallet={haveWallet}
             sethaveWallet={sethaveWallet}
           ></LoginWallet>
         );
       case "RestoreWallet":
         return (
           <RestoreWallet
-            haveWallet={haveWallet}
+            // haveWallet={haveWallet}
             sethaveWallet={sethaveWallet}
           ></RestoreWallet>
         );
       case "CreateWallet":
         return (
           <CreateWallet
-            haveWallet={haveWallet}
+            // haveWallet={haveWallet}
             sethaveWallet={sethaveWallet}
           ></CreateWallet>
         );
       case "CreatePwdWallet":
         return (
           <CreatePwdWallet
-            haveWallet={haveWallet}
+            // haveWallet={haveWallet}
             sethaveWallet={sethaveWallet}
           ></CreatePwdWallet>
         );
@@ -119,6 +118,10 @@ const Topnav = () => {
             //renderItems={(item, index) => renderNotificationItem(item, index)}
             // renderFooter={() => <Link to="/">View All</Link>}
             //onClick={haveWallet}
+            // anchorEl={AnchorEl}
+            // open={Boolean(AnchorEl)}
+            // onOpen={handleMenuOpen}
+            // onClose={handleMenuClose}
             renderComponent={returnMenu(haveWallet)}
           />
           {/* </div> */}
